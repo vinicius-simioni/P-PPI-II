@@ -15,6 +15,12 @@ const Login = () => {
     })
       .then((response) => {
         console.log('Login bem-sucedido:', response.data);
+
+        // guardar o token no localstorage
+        const token = response.data.token;
+        localStorage.setItem('token', token)
+
+        // redirecionar para o dashboard
       })
       .catch((error) => {
         console.error('Erro no login:', error);
