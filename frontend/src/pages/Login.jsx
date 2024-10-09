@@ -1,12 +1,24 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [senha, setSenha] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login with:', { email, password });
+    console.log('Login with:', { email, senha });
+
+    axios.post("http://localhost:3000/api/login", {
+      email: email,
+      senha: senha,
+    })
+      .then((response) => {
+        console.log('Login bem-sucedido:', response.data);
+      })
+      .catch((error) => {
+        console.error('Erro no login:', error);
+      });
   };
 
   return (
@@ -23,8 +35,8 @@ const Login = () => {
         />
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
           placeholder="Password"
           required
           className="border p-2 w-full rounded-lg"
