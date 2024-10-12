@@ -5,6 +5,7 @@ import Register from './pages/Register.jsx';
 import Profile from './pages/Profile.jsx';
 import ExchangeHistory from './pages/ExchangeHistory.jsx';
 import Navbar from './components/Navbar.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 
 const App = () => (
   <Router>
@@ -15,6 +16,7 @@ const App = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/history" element={<ExchangeHistory />} />
       </Routes>
     </div>
