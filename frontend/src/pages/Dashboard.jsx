@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [userName] = useState("Teste");
@@ -11,51 +12,49 @@ const Dashboard = () => {
 
       <main className="p-6">
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">Livros Disponíveis</h2>
-            <p className="text-gray-600">
-              Navegue pelos livros disponíveis e encontre algo do seu interesse.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">Meus Livros</h2>
-            <p className="text-gray-600">
-              Veja a lista de livros que você cadastrou na plataforma.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">Sugestões de Troca</h2>
-            <p className="text-gray-600">
-              Receba sugestões de trocas baseadas nos seus interesses.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">Chat</h2>
-            <p className="text-gray-600">
-              Converse com outros usuários para combinar trocas.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">Sistema de Reputação</h2>
-            <p className="text-gray-600">
-              Verifique a reputação dos usuários antes de efetuar trocas.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">Histórico de Trocas</h2>
-            <p className="text-gray-600">
-              Acompanhe as trocas realizadas no passado.
-            </p>
-          </div>
+          <DashboardCard 
+            title="Livros Disponíveis" 
+            description="Navegue pelos livros disponíveis e encontre algo do seu interesse." 
+            route="/livros"
+          />
+          <DashboardCard 
+            title="Meus Livros" 
+            description="Veja a lista de livros que você cadastrou na plataforma." 
+            route="/meus-livros"
+          />
+          <DashboardCard 
+            title="Sugestões de Troca" 
+            description="Receba sugestões de trocas baseadas nos seus interesses." 
+            route="/sugestoes"
+          />
+          <DashboardCard 
+            title="Chat" 
+            description="Converse com outros usuários para combinar trocas." 
+            route="/chat"
+          />
+          <DashboardCard 
+            title="Sistema de Reputação" 
+            description="Verifique a reputação dos usuários antes de efetuar trocas." 
+            route="/reputacao"
+          />
+          <DashboardCard 
+            title="Histórico de Trocas" 
+            description="Acompanhe as trocas realizadas no passado." 
+            route="/historico"
+          />
         </section>
       </main>
     </div>
   );
 };
+
+const DashboardCard = ({ title, description, route }) => (
+  <Link to={route}>
+    <div className="bg-white p-6 rounded shadow hover:shadow-lg transition-shadow cursor-pointer h-32">
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
+      <p className="text-gray-600">{description}</p>
+    </div>
+  </Link>
+);
 
 export default Dashboard;
