@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ const Login = () => {
         localStorage.setItem('token', token)
 
         // redirecionar para o dashboard
+        navigate('/dashboard')
       })
       .catch((error) => {
         console.error('Erro no login:', error);
