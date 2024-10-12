@@ -10,7 +10,7 @@ import Dashboard from './pages/Dashboard.jsx';
 const App = () => (
   <Router>
     <Navbar />
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
