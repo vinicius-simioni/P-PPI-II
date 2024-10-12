@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const Navbar = () => {
   const token = localStorage.getItem('token');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -9,19 +11,47 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-500 text-white p-4 shadow-lg flex justify-between">
-      <h1>Circular Livros</h1>
-      <ul className="flex justify-end">
-        <li className='mx-3'><Link to="/" className="hover:underline">Home</Link></li>
+    <nav className="bg-blue-600 text-white p-4 shadow-lg flex justify-between items-center">
+      <h1 className="text-xl font-bold">Circular Livros</h1>
+
+      <ul className="flex items-center">
+        <li className="mx-3">
+          <Link to="/" className="hover:underline">Home</Link>
+        </li>
         {token ? (
-          <>
-            <li className='mx-3'><Link to="/profile" className="hover:underline">Perfil</Link></li>
-            <li className='mx-3'><Link to="/history" className="hover:underline">Histórico de Trocas</Link></li>
-            <li className='mx-3'><Link to="/dashboard" className="hover:underline">Dashboard</Link></li>
-            <li className='mx-3'><Link to="/" onClick={handleLogout} className="hover:underline">Logout</Link></li>
-          </>
+          <div className="relative">
+            {/* Dropdown Button */}
+            <button 
+              className="hover:underline mx-3"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              Menu ▼
+            </button>
+
+            {/* Dropdown Items */}
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg">
+                <ul className="py-2">
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <Link to="/profile">Perfil</Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <Link to="/history">Histórico de Trocas</Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100">
+                    <Link to="/dashboard">Dashboard</Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-red-500 text-red-700">
+                    <button onClick={handleLogout}>Logout</button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         ) : (
-          <li className='mx-3'><Link to="/login" className="hover:underline">Login</Link></li>
+          <li className="mx-3">
+            <Link to="/login" className="hover:underline">Login</Link>
+          </li>
         )}
       </ul>
     </nav>
