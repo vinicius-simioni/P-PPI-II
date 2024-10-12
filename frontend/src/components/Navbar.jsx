@@ -17,6 +17,7 @@ const Navbar = () => {
           <>
             <li className='mx-3'><Link to="/profile" className="hover:underline">Perfil</Link></li>
             <li className='mx-3'><Link to="/history" className="hover:underline">Histórico de Trocas</Link></li>
+            <li className='mx-3'><Link to="/dashboard" className="hover:underline">Dashboard</Link></li>
             <li className='mx-3'><Link to="/" onClick={handleLogout} className="hover:underline">Logout</Link></li>
           </>
         ) : (
