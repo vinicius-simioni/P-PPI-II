@@ -7,6 +7,7 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
       },
       nome: {
@@ -15,9 +16,14 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true, 
+        unique: true, 
       },
       senha: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      cidade: {
         type: Sequelize.STRING,
         allowNull: true,
       },

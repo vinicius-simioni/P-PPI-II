@@ -7,27 +7,26 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        autoIncrement: true, 
         primaryKey: true,
       },
       titulo: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      id_autor: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: "autores",
-          key: "id",
-        },
+      autor: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      id_editora: {
+      id_usuario: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "editora",
+          model: "usuarios",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
     });
   },
