@@ -4,7 +4,6 @@ const verifyTokenMiddleware = require("../middlewares/verifyTokenMiddleware");
 
 const LivroController = require('../controllers/LivroController');
 const UsuarioController = require('../controllers/UsuarioController');
-const UsuarioLivroController = require('../controllers/UsuarioLivroController');
 const AvaliacaoController = require('../controllers/AvaliacaoController');
 
 // Rotas para autenticação
