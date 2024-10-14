@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     tableName: 'usuarios',
+    timestamps: 'true',
   });
 
   return Usuario;

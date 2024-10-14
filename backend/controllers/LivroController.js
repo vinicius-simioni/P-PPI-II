@@ -24,9 +24,17 @@ class LivroController {
   }
 
   async store(req, res) {
-    const { titulo, id_autor, id_editora } = req.body;
+    const { titulo, autor } = req.body;
+
+    //acessando id do middleware
+    const id_usuario = req.user_id;
+
+    console.log(req.body)
+    console.log(id_usuario)
+    return
+
     try {
-      const novoLivro = await Livro.create({ titulo, id_autor, id_editora });
+      const novoLivro = await Livro.create({ titulo, autor, id_usuario });
       res.status(201).json(novoLivro);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao criar livro' });

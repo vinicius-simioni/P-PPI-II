@@ -48,10 +48,12 @@ class UsuarioController {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, senha } = req.body;
+    const { email, senha } = req.body
+
 
     try {
       const user = await Usuario.findOne({ where: { email } });
+
       if (!user) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
