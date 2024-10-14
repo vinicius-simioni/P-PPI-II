@@ -29,10 +29,6 @@ class LivroController {
     //acessando id do middleware
     const id_usuario = req.user_id;
 
-    console.log(req.body)
-    console.log(id_usuario)
-    return
-
     try {
       const novoLivro = await Livro.create({ titulo, autor, id_usuario });
       res.status(201).json(novoLivro);
