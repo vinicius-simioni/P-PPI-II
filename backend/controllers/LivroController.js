@@ -30,6 +30,33 @@ class LivroController {
     }
   }
 
+  async search(req, res) {
+    const { query } = req; 
+    const { titulo, autor } = query;
+
+    try {
+        const where = {};
+        
+        if (titulo) {
+            where.titulo = {
+                [Op.like]: `%${titulo}%`,
+            };
+        }
+
+        if (autor) {
+            where.autor = {
+                [Op.like]: `%${autor}%`,
+            };
+        }
+
+        const livros = await Livro.findAll({ where });
+        
+        res.status(200).json(livros);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar livros' });
+    }
+}
+
   async show(req, res) {
     const id = req.params.id;
     try {
