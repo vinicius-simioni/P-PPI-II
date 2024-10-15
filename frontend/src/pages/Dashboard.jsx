@@ -15,7 +15,7 @@ const Dashboard = () => {
           <DashboardCard 
             title="Livros Disponíveis" 
             description="Navegue pelos livros disponíveis e encontre algo do seu interesse." 
-            route="/livros"
+            route="/livros-disponiveis"
           />
           <DashboardCard 
             title="Meus Livros" 
