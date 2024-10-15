@@ -59,15 +59,18 @@ class LivroController {
 
   async update(req, res) {
     const id = req.params.id;
-    const { titulo, id_autor, id_editora } = req.body;
+    const { titulo, autor } = req.body;
+    //acessando id do middleware
+    const id_usuario = req.user_id;
+
     try {
       const livro = await Livro.findByPk(id);
       if (!livro) {
         return res.status(404).json({ error: "Livro não encontrado" });
       }
       livro.titulo = titulo;
-      livro.id_autor = id_autor;
-      livro.id_editora = id_editora;
+      livro.autor = autor;
+      livro.id_usuario = id_usuario;
       await livro.save();
       res.status(200).json(livro);
     } catch (error) {
