@@ -11,12 +11,13 @@ router.route("/users").post(UsuarioController.create);
 router.route("/login").post(UsuarioController.login);
 
 // Rotas para livros
-router.get('/livros', LivroController.index);
-router.get('/livros/:id', LivroController.show);
+router.get('/livros', verifyTokenMiddleware, LivroController.index);
+router.get('/livros/:id', verifyTokenMiddleware, LivroController.show);
 router.post('/livros', verifyTokenMiddleware, LivroController.store);
-router.put('/livros/:id', LivroController.update);
-router.delete('/livros/:id',verifyTokenMiddleware, LivroController.destroy);
+router.put('/livros/:id', verifyTokenMiddleware, LivroController.update);
+router.delete('/livros/:id', verifyTokenMiddleware, LivroController.destroy);
 router.get('/livros-usuario', verifyTokenMiddleware, LivroController.findBookByUser);
+router.get('/livros-busca', verifyTokenMiddleware, LivroController.search);
 
 // Rotas para avaliações
 router.get('/avaliacoes', AvaliacaoController.index);
