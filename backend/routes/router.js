@@ -15,7 +15,8 @@ router.get('/livros', LivroController.index);
 router.get('/livros/:id', LivroController.show);
 router.post('/livros', verifyTokenMiddleware, LivroController.store);
 router.put('/livros/:id', LivroController.update);
-router.delete('/livros/:id', LivroController.destroy);
+router.delete('/livros/:id',verifyTokenMiddleware, LivroController.destroy);
+router.get('/livros-usuario', verifyTokenMiddleware, LivroController.findBookByUser);
 
 // Rotas para avaliações
 router.get('/avaliacoes', AvaliacaoController.index);
