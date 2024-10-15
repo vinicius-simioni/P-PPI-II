@@ -5,19 +5,17 @@ const MeusLivros = () => {
   const [livros, setLivros] = useState([]);
   const [novoLivro, setNovoLivro] = useState({ titulo: '', autor: '' });
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [token, setToken] = useState('');
 
   useEffect(() => {
-    const tokenSalvo = localStorage.getItem('token');
-    if (tokenSalvo) {
-      setToken(tokenSalvo)
-    }
-  }, []);
-
-  useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchLivros = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/livros');
+        const response = await axios.get('http://localhost:3000/api/livros-usuario', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         setLivros(response.data);
       } catch (error) {
         console.error('Erro ao buscar os livros:', error);
@@ -34,6 +32,8 @@ const MeusLivros = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem('token');
 
     if (novoLivro.titulo && novoLivro.autor) {
       try {
@@ -64,7 +64,26 @@ const MeusLivros = () => {
   };
 
   const handleDelete = async (index) => {
-    //
+    const token = localStorage.getItem('token');
+    const livro = livros[index];
+  
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/livros/${livro.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 204) {
+        const livrosAtualizados = livros.filter((_, i) => i !== index);
+        setLivros(livrosAtualizados);
+      } else {
+        alert('Erro ao deletar o livro. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      alert('Erro ao conectar-se à API.');
+    }
   };
 
   return (
