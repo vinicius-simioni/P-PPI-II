@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const token = localStorage.getItem('token');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.reload();
+    navigate('/')
   };
 
   return (
