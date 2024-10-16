@@ -1,14 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [userName] = useState("Teste");
-
   return (
     <div className="min-h-fit">
-      <header className="p-6">
-        <h1 className="text-3xl font-semibold">Bem-vindo, {userName}!</h1>
-      </header>
 
       <main className="p-6">
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
