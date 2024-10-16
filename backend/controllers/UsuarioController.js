@@ -12,6 +12,7 @@ class UsuarioController {
       .isLength({ min: 6 })
       .withMessage('A senha deve possuir ao menos 6 caracteres')
       .run(req);
+    await body('cidade').notEmpty().withMessage('O campo cidade é obrigatório').run(req);
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -19,7 +20,7 @@ class UsuarioController {
     }
 
     try {
-      const { nome, email, senha } = req.body;
+      const { nome, email, senha, cidade } = req.body;
 
       const existingUser = await Usuario.findOne({ where: { email } });
       if (existingUser) {
@@ -32,6 +33,7 @@ class UsuarioController {
         nome,
         email,
         senha: hashedPassword,
+        cidade,
       });
       res.status(201).json(newUser);
     } catch (error) {

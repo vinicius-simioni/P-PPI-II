@@ -7,7 +7,7 @@ const UsuarioController = require('../controllers/UsuarioController');
 const AvaliacaoController = require('../controllers/AvaliacaoController');
 
 // Rotas para autenticação
-router.route("/users").post(UsuarioController.create);
+router.route("/register").post(UsuarioController.create);
 router.route("/login").post(UsuarioController.login);
 
 // Rotas para livros
