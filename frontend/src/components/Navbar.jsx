@@ -15,18 +15,19 @@ const Navbar = () => {
       <h1 className="text-xl font-bold">Circular Livros</h1>
 
       <ul className="flex items-center">
-        <li className="mx-3">
-          <Link to="/" className="hover:underline">Home</Link>
-        </li>
+
         {token ? (
           <div className="relative">
+            <Link to="/dashboard">Dashboard</Link>
             {/* Dropdown Button */}
-            <button 
+            <button
               className="hover:underline mx-3"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               Menu ▼
             </button>
+
+
 
             {/* Dropdown Items */}
             {dropdownOpen && (
@@ -34,12 +35,6 @@ const Navbar = () => {
                 <ul className="py-2">
                   <li className="px-4 py-2 hover:bg-gray-100">
                     <Link to="/profile">Perfil</Link>
-                  </li>
-                  <li className="px-4 py-2 hover:bg-gray-100">
-                    <Link to="/history">Histórico de Trocas</Link>
-                  </li>
-                  <li className="px-4 py-2 hover:bg-gray-100">
-                    <Link to="/dashboard">Dashboard</Link>
                   </li>
                   <li className="px-4 py-2 hover:bg-red-500 text-red-700">
                     <button onClick={handleLogout}>Logout</button>
@@ -49,9 +44,14 @@ const Navbar = () => {
             )}
           </div>
         ) : (
-          <li className="mx-3">
-            <Link to="/login" className="hover:underline">Login</Link>
-          </li>
+          <>
+            <li className="mx-3">
+              <Link to="/" className="hover:underline">Home</Link>
+            </li>
+            <li className="mx-3">
+              <Link to="/login" className="hover:underline">Login</Link>
+            </li>
+          </>
         )}
       </ul>
     </nav>
