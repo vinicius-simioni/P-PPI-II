@@ -30,6 +30,10 @@ const Login = () => {
       });
   };
 
+  const handleRegistration = () => {
+    navigate('/register')
+  }
+
   return (
     <div className="max-w-lg mx-auto mt-8">
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
@@ -52,6 +56,10 @@ const Login = () => {
         />
         <button type="submit" className="bg-blue-500 text-white p-2 w-full rounded-lg hover:bg-blue-700">
           Login
+        </button>
+
+        <button type="submit" onClick={handleRegistration} className="bg-slate-400 text-white p-2 w-full rounded-lg hover:bg-blue-700">
+          Cadastrar
         </button>
       </form>
     </div>
