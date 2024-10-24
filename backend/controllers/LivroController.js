@@ -1,4 +1,5 @@
-const { Livro } = require("../models");
+const { Op } = require("sequelize");
+const { Livro, Usuario } = require("../models");
 
 class LivroController {
   async index(req, res) {
@@ -20,42 +21,62 @@ class LivroController {
       });
 
       if (livros.length === 0) {
-        return res.status(404).json({ message: 'Nenhum livro encontrado para este usuário.' });
+        return res
+          .status(404)
+          .json({ message: "Nenhum livro encontrado para este usuário." });
       }
 
       res.status(200).json(livros);
     } catch (error) {
-      console.error('Erro ao buscar livros:', error);
-      res.status(500).json({ error: 'Erro ao buscar livros' });
+      console.error("Erro ao buscar livros:", error);
+      res.status(500).json({ error: "Erro ao buscar livros" });
     }
   }
 
   async search(req, res) {
-    const { query } = req; 
-    const { titulo, autor } = query;
+    const { titulo, autor, cidade } = req.query;
 
     try {
-        const where = {};
-        
-        if (titulo) {
-            where.titulo = {
-                [Op.like]: `%${titulo}%`,
-            };
-        }
+      const where = {};
 
-        if (autor) {
-            where.autor = {
-                [Op.like]: `%${autor}%`,
-            };
-        }
+      if (titulo) {
+        where.titulo = {
+          [Op.like]: `%${titulo}%`,
+        };
+      }
 
-        const livros = await Livro.findAll({ where });
-        
-        res.status(200).json(livros);
+      if (autor) {
+        where.autor = {
+          [Op.like]: `%${autor}%`,
+        };
+      }
+
+      const include = [];
+
+      if (cidade) {
+        include.push({
+          model: Usuario,
+          as: "usuario",
+          where: {
+            cidade: {
+              [Op.like]: `%${cidade}%`,
+            },
+          },
+          attributes: ["nome", "cidade"],
+        });
+      }
+
+      const livros = await Livro.findAll({
+        where,
+        include,
+      });
+
+      res.status(200).json(livros);
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao buscar livros' });
+      console.error("Erro ao buscar livros:", error);
+      res.status(500).json({ error: "Erro ao buscar livros" });
     }
-}
+  }
 
   async show(req, res) {
     const id = req.params.id;
