@@ -56,7 +56,7 @@ const LivrosDisponiveis = () => {
   return (
     <div className="min-h-fit p-6">
 
-      <div className="mb-6">
+      <div className="mb-6 flex justify-center">
         <input
           type="text"
           placeholder="Título"
