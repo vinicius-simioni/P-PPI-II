@@ -95,6 +95,7 @@ const LivrosDisponiveis = () => {
               <div>
                 <h3 className="text-lg font-semibold">{livro.titulo}</h3>
                 <p className="text-gray-600">Autor: {livro.autor}</p>
+                <p className="text-gray-600">Cidade: {livro.cidade || 'Cidade não especificada'}</p>
               </div>
             </li>
           ))}

@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Livro, Usuario } = require("../models");
+const { Livro, Usuario, sequelize } = require("../models");
 
 class LivroController {
   async index(req, res) {
@@ -35,43 +35,33 @@ class LivroController {
 
   async search(req, res) {
     const { titulo, autor, cidade } = req.query;
-
+  
+    const sql = `
+      SELECT 
+        l.*, 
+        u.nome AS nome, 
+        u.cidade AS cidade
+      FROM 
+        livros AS l
+      JOIN 
+        usuarios AS u ON l.id_usuario = u.id
+      WHERE 
+        (:titulo IS NULL OR l.titulo LIKE :titulo) AND
+        (:autor IS NULL OR l.autor LIKE :autor) AND
+        (:cidade IS NULL OR u.cidade LIKE :cidade);
+    `;
+  
     try {
-      const where = {};
-
-      if (titulo) {
-        where.titulo = {
-          [Op.like]: `%${titulo}%`,
-        };
-      }
-
-      if (autor) {
-        where.autor = {
-          [Op.like]: `%${autor}%`,
-        };
-      }
-
-      const include = [];
-
-      if (cidade) {
-        include.push({
-          model: Usuario,
-          as: "usuario",
-          where: {
-            cidade: {
-              [Op.like]: `%${cidade}%`,
-            },
-          },
-          attributes: ["nome", "cidade"],
-        });
-      }
-
-      const livros = await Livro.findAll({
-        where,
-        include,
+      const [resultados] = await sequelize.query(sql, {
+        replacements: {
+          titulo: titulo ? `%${titulo}%` : null,
+          autor: autor ? `%${autor}%` : null,
+          cidade: cidade ? `%${cidade}%` : null,
+        },
       });
-
-      res.status(200).json(livros);
+  
+      console.log(resultados);
+      res.status(200).json(resultados);
     } catch (error) {
       console.error("Erro ao buscar livros:", error);
       res.status(500).json({ error: "Erro ao buscar livros" });
