@@ -5,29 +5,32 @@ const LivrosDisponiveis = () => {
   const [livros, setLivros] = useState([]);
   const [tituloBusca, setTituloBusca] = useState('');
   const [autorBusca, setAutorBusca] = useState('');
+  const [cidadeBusca, setCidadeBusca] = useState('');
 
   useEffect(() => {
-    const fetchLivros = async () => {
-      const token = localStorage.getItem('token'); 
-  
-      try {
-        const response = await axios.get('http://localhost:3000/api/livros', {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
-        setLivros(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar os livros:', error);
-      }
-    };
-  
-    fetchLivros();
+  //   const fetchLivros = async () => {
+  //     const token = localStorage.getItem('token');
+
+  //     try {
+  //       const response = await axios.get('http://localhost:3000/api/livros', {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       setLivros(response.data);
+  //     } catch (error) {
+  //       console.error('Erro ao buscar os livros:', error);
+  //     }
+  //   };
+
+  //   fetchLivros();
   }, []);
-  
+
 
   const handleSearch = async () => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
+
+    console.log(tituloBusca, autorBusca, cidadeBusca)
   
     try {
       const response = await axios.get('http://localhost:3000/api/livros-busca', {
@@ -35,15 +38,20 @@ const LivrosDisponiveis = () => {
           Authorization: `Bearer ${token}`, 
         },
         params: {
-          titulo: tituloBusca,
-          autor: autorBusca,
+          titulo: tituloBusca || '',  
+          autor: autorBusca || '',
+          cidade: cidadeBusca || ''
         },
       });
-      setLivros(response.data);
+      setLivros(response.data);  
     } catch (error) {
       console.error('Erro ao buscar livros:', error);
     }
-  };
+  };  
+
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
   return (
     <div className="min-h-fit p-6">
@@ -51,16 +59,23 @@ const LivrosDisponiveis = () => {
       <div className="mb-6">
         <input
           type="text"
-          placeholder="Buscar por título"
+          placeholder="Título"
           value={tituloBusca}
           onChange={(e) => setTituloBusca(e.target.value)}
           className="p-2 border rounded mr-2"
         />
         <input
           type="text"
-          placeholder="Buscar por autor"
+          placeholder="Autor"
           value={autorBusca}
           onChange={(e) => setAutorBusca(e.target.value)}
+          className="p-2 border rounded mr-2"
+        />
+        <input
+          type="text"
+          placeholder="Cidade"
+          value={cidadeBusca}
+          onChange={(e) => setCidadeBusca(e.target.value)}
           className="p-2 border rounded mr-2"
         />
         <button
