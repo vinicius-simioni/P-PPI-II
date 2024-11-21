@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('mensagens', [
+    await queryInterface.bulkInsert('mensagem', [
       {
         texto: 'Oi, como vai?',
         id_emissor: 1,
@@ -27,6 +27,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('mensagens', null, {});
+    await queryInterface.bulkDelete('mensagem', null, {});
   },
 };
