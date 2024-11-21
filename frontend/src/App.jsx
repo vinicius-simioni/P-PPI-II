@@ -8,6 +8,7 @@ import Navbar from './components/Navbar.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import MeusLivros from './pages/MeusLivros.jsx';
 import LivrosDisponiveis from './pages/LivrosDisponiveis.jsx';
+import Chat from './pages/Chat.jsx';
 
 const App = () => (
   <Router>
@@ -22,6 +23,7 @@ const App = () => (
         <Route path="/profile" element={<Profile />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/history" element={<ExchangeHistory />} />
+        <Route path="/chat/:id" element={<Chat />} />
       </Routes>
     </div>
   </Router>
