@@ -5,6 +5,7 @@ const verifyTokenMiddleware = require("../middlewares/verifyTokenMiddleware");
 const LivroController = require('../controllers/LivroController');
 const UsuarioController = require('../controllers/UsuarioController');
 const AvaliacaoController = require('../controllers/AvaliacaoController');
+const MensagemController = require("../controllers/MensagemController");
 
 // Rotas para autenticação
 router.route("/register").post(UsuarioController.create);
@@ -25,5 +26,10 @@ router.get('/avaliacoes/:id', AvaliacaoController.show);
 router.post('/avaliacoes', AvaliacaoController.store);
 router.put('/avaliacoes/:id', AvaliacaoController.update);
 router.delete('/avaliacoes/:id', AvaliacaoController.destroy);
+
+// Rotas para mensagens
+router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensagem);
+router.get("/mensagens", verifyTokenMiddleware, MensagemController.listarMensagens);
+
 
 module.exports = router;
