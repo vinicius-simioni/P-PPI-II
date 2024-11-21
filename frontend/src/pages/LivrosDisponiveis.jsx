@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const LivrosDisponiveis = () => {
@@ -6,24 +7,25 @@ const LivrosDisponiveis = () => {
   const [tituloBusca, setTituloBusca] = useState('');
   const [autorBusca, setAutorBusca] = useState('');
   const [cidadeBusca, setCidadeBusca] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-  //   const fetchLivros = async () => {
-  //     const token = localStorage.getItem('token');
+    //   const fetchLivros = async () => {
+    //     const token = localStorage.getItem('token');
 
-  //     try {
-  //       const response = await axios.get('http://localhost:3000/api/livros', {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       setLivros(response.data);
-  //     } catch (error) {
-  //       console.error('Erro ao buscar os livros:', error);
-  //     }
-  //   };
+    //     try {
+    //       const response = await axios.get('http://localhost:3000/api/livros', {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       });
+    //       setLivros(response.data);
+    //     } catch (error) {
+    //       console.error('Erro ao buscar os livros:', error);
+    //     }
+    //   };
 
-  //   fetchLivros();
+    //   fetchLivros();
   }, []);
 
 
@@ -31,27 +33,32 @@ const LivrosDisponiveis = () => {
     const token = localStorage.getItem('token');
 
     console.log(tituloBusca, autorBusca, cidadeBusca)
-  
+
     try {
       const response = await axios.get('http://localhost:3000/api/livros-busca', {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         params: {
-          titulo: tituloBusca || '',  
+          titulo: tituloBusca || '',
           autor: autorBusca || '',
           cidade: cidadeBusca || ''
         },
       });
-      setLivros(response.data);  
+      setLivros(response.data);
     } catch (error) {
       console.error('Erro ao buscar livros:', error);
     }
-  };  
+  };
 
   useEffect(() => {
     handleSearch();
   }, []);
+
+  const iniciarChat = (id_usuario) => {
+    navigate(`/chat/${id_usuario}`);
+  };
+
 
   return (
     <div className="min-h-fit p-6">
@@ -96,6 +103,15 @@ const LivrosDisponiveis = () => {
                 <h3 className="text-lg font-semibold">{livro.titulo}</h3>
                 <p className="text-gray-600">Autor: {livro.autor}</p>
                 <p className="text-gray-600">Cidade: {livro.cidade || 'Cidade não especificada'}</p>
+                <p className="text-gray-600">Anunciante: {livro.usuario?.nome}</p> {/* Nome do usuário */}
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => iniciarChat(livro.id_usuario)} 
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Iniciar Chat
+                </button>
               </div>
             </li>
           ))}
