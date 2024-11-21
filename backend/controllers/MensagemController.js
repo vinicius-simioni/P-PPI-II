@@ -1,4 +1,4 @@
-const { Mensagem, Usuario } = require("../models");
+const { Mensagem } = require("../models");
 const { Op } = require("sequelize");
 
 class MensagemController {
@@ -18,6 +18,7 @@ class MensagemController {
       });
       res.status(201).json(novaMensagem); 
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: 'Erro ao enviar mensagem' });
     }
   }
