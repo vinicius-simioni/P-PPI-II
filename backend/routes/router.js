@@ -30,6 +30,9 @@ router.delete('/avaliacoes/:id', AvaliacaoController.destroy);
 // Rotas para mensagens
 router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensagem);
 router.get("/mensagens", verifyTokenMiddleware, MensagemController.listarMensagens);
+router.get('/mensagens/:id', verifyTokenMiddleware, MensagemController.historicoMensagens);
+router.get('/chats', verifyTokenMiddleware, MensagemController.listarChats);
+
 
 
 module.exports = router;
