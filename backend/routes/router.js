@@ -21,11 +21,7 @@ router.get('/livros-usuario', verifyTokenMiddleware, LivroController.findBookByU
 router.get('/livros-busca', verifyTokenMiddleware, LivroController.search);
 
 // Rotas para avaliações
-router.get('/avaliacoes', AvaliacaoController.index);
-router.get('/avaliacoes/:id', AvaliacaoController.show);
-router.post('/avaliacoes', AvaliacaoController.store);
-router.put('/avaliacoes/:id', AvaliacaoController.update);
-router.delete('/avaliacoes/:id', AvaliacaoController.destroy);
+router.post('/avaliacao', verifyTokenMiddleware, AvaliacaoController.criarAvaliacao);
 
 // Rotas para mensagens
 router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensagem);
