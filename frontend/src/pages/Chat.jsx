@@ -84,6 +84,16 @@ const Chat = () => {
   useEffect(() => {
     carregarHistorico();
     carregarChats();
+
+    // Atualizar o histórico de mensagens e de chats a cada 2 segundos
+    const intervalo = setInterval(() => {
+      carregarHistorico();
+      carregarChats();
+    }, 2000);
+
+    // Limpar o intervalo ao desmontar o componente
+    return () => clearInterval(intervalo);
+
   }, [id]);
 
   return (
