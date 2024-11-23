@@ -24,16 +24,16 @@ const Chat = () => {
   };
 
   // Buscar lista de outros chats
-  // const carregarChats = async () => {
-  //   try {
-  //     const response = await axios.get('http://localhost:3000/api/chats', {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     setChats(response.data);
-  //   } catch (error) {
-  //     console.error('Erro ao carregar chats:', error);
-  //   }
-  // };
+  const carregarChats = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/chats', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setChats(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar chats:', error);
+    }
+  };
 
   // Enviar mensagem
   const enviarMensagem = async () => {
@@ -60,7 +60,7 @@ const Chat = () => {
   // Efeito para carregar dados ao montar o componente ou trocar de chat
   useEffect(() => {
     carregarHistorico();
-    // carregarChats();
+    carregarChats();
   }, [id]);
 
   return (

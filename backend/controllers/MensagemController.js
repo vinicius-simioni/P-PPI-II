@@ -1,6 +1,6 @@
 const { Mensagem } = require("../models");
 const { Op, Sequelize } = require("sequelize");
-const { sequelize } = require('../models');
+const { sequelize } = require("../models");
 
 class MensagemController {
   async enviarMensagem(req, res) {
@@ -30,7 +30,7 @@ class MensagemController {
     const id_emissor = req.user_id;
     const { id_receptor } = req.query;
 
-    console.log('Listar Mensagens');
+    console.log("Listar Mensagens");
 
     if (!id_receptor) {
       return res.status(400).json({ error: "Receptor é necessário" });
@@ -54,11 +54,11 @@ class MensagemController {
   }
 
   async historicoMensagens(req, res) {
-    const id_receptor  = req.params.id;
+    const id_receptor = req.params.id;
     const id_emissor = req.user_id;
 
-    console.log("Receptor:", id_receptor, "Emissor:", id_emissor);
-  
+    // console.log("Receptor:", id_receptor, "Emissor:", id_emissor);
+
     try {
       const mensagens = await sequelize.query(
         `SELECT * 
@@ -73,8 +73,8 @@ class MensagemController {
         }
       );
 
-      console.log("Mensagens retornadas:", mensagens);
-  
+      // console.log("Mensagens retornadas:", mensagens);
+
       res.json(mensagens);
     } catch (error) {
       console.error("Erro ao carregar histórico:", error);
@@ -87,48 +87,29 @@ class MensagemController {
     const id_usuario = req.user_id;
 
     try {
-      const mensagens = await Mensagem.findAll({
-        where: {
-          [Op.or]: [
-            { id_emissor: id_usuario }, 
-            { id_receptor: id_usuario }, 
-          ],
-        },
-        include: [
-          {
-            model: Usuario,
-            as: "emissor",
-            attributes: ["id", "nome"], 
-          },
-          {
-            model: Usuario,
-            as: "receptor",
-            attributes: ["id", "nome"], 
-          },
-        ],
-        order: [["createdAt", "DESC"]], 
-      });
-
-      // Processar a lista de mensagens para retornar apenas os chats únicos
-      const chats = [];
-      const idsConversados = new Set();
-
-      mensagens.forEach((mensagem) => {
-        const outroUsuario =
-          mensagem.id_emissor === id_usuario
-            ? mensagem.receptor 
-            : mensagem.emissor; 
-
-        if (!idsConversados.has(outroUsuario.id)) {
-          idsConversados.add(outroUsuario.id);
-          chats.push({
-            id: outroUsuario.id,
-            nome: outroUsuario.nome,
-            ultimaMensagem: mensagem.texto, 
-            dataUltimaMensagem: mensagem.createdAt, 
-          });
+      const chats = await sequelize.query(
+        `SELECT 
+          outro_usuario.id AS id,
+          outro_usuario.nome AS nome,
+          m.texto AS ultimaMensagem,
+          m.createdAt AS dataUltimaMensagem
+       FROM mensagem m
+       INNER JOIN usuarios AS outro_usuario ON 
+           (m.id_emissor = :id_usuario AND outro_usuario.id = m.id_receptor)
+           OR (m.id_receptor = :id_usuario AND outro_usuario.id = m.id_emissor)
+       WHERE m.createdAt = (
+           SELECT MAX(createdAt)
+           FROM mensagem
+           WHERE 
+             (id_emissor = m.id_emissor AND id_receptor = m.id_receptor)
+             OR (id_emissor = m.id_receptor AND id_receptor = m.id_emissor)
+       )
+       ORDER BY m.createdAt DESC`,
+        {
+          replacements: { id_usuario }, 
+          type: Sequelize.QueryTypes.SELECT, 
         }
-      });
+      );
 
       res.json(chats);
     } catch (error) {
