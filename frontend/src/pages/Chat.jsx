@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
 const Chat = () => {
@@ -10,6 +10,10 @@ const Chat = () => {
   const [chats, setChats] = useState([]);
 
   const token = localStorage.getItem('token');
+
+  // Refs para histórico de mensagens e campo de texto
+  const historicoRef = useRef(null);
+  const mensagemRef = useRef(null);
 
   // Buscar histórico de mensagens do chat atual
   const carregarHistorico = async () => {
@@ -35,6 +39,13 @@ const Chat = () => {
     }
   };
 
+  // Scrollar para o final do histórico
+  useEffect(() => {
+    if (historicoRef.current) {
+      historicoRef.current.scrollTop = historicoRef.current.scrollHeight;
+    }
+  }, [historico]);
+
   // Enviar mensagem
   const enviarMensagem = async () => {
     if (mensagem.trim() !== '') {
@@ -51,20 +62,32 @@ const Chat = () => {
         );
         setMensagem('');
         carregarHistorico();
+        // Focar novamente no campo de texto após o envio
+        if (mensagemRef.current) {
+          mensagemRef.current.focus();
+        }
       } catch (error) {
         console.error('Erro ao enviar mensagem:', error);
       }
     }
   };
 
-  // Efeito para carregar dados ao montar o componente ou trocar de chat
+  // Enviar mensagem com "Enter"
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) { // "Enter" sem "Shift"
+      event.preventDefault(); // Previne a quebra de linha
+      enviarMensagem();
+    }
+  };
+
+  // Carregar dados ao montar o componente ou trocar de chat
   useEffect(() => {
     carregarHistorico();
     carregarChats();
   }, [id]);
 
   return (
-    <div className="flex h-[90vh]">
+    <div className="flex h-[90vh] mx-auto max-w-7xl">
       {/* Lista de outros chats (coluna à esquerda) */}
       <div className="w-1/4 border-r p-4 overflow-y-auto">
         <h2 className="text-lg font-bold mb-4">Seus Chats</h2>
@@ -83,9 +106,12 @@ const Chat = () => {
       </div>
 
       {/* Janela de mensagens (coluna à direita) */}
-      <div className="flex-1 p-4 flex flex-col">
+      <div className="flex-1 p-4 flex flex-col max-w-3xl">
         {/* Histórico de mensagens */}
-        <div className="flex-1 overflow-y-auto border p-4 mb-4">
+        <div
+          ref={historicoRef} // Adicionando referência aqui
+          className="flex-1 overflow-y-auto border p-4 mb-4"
+        >
           <h2 className="text-lg font-bold mb-4">Chat com {id}</h2>
           {historico.length > 0 ? (
             historico.map((msg) => (
@@ -96,7 +122,7 @@ const Chat = () => {
                     : 'text-right text-blue-600'
                   }`}
               >
-                <p>{msg.texto}</p>
+                <p className="break-words">{msg.texto}</p>
                 <small className="text-gray-500 text-sm">{msg.createdAt}</small>
               </div>
             ))
@@ -108,8 +134,10 @@ const Chat = () => {
         {/* Campo de envio de mensagem */}
         <div className="flex items-center">
           <textarea
+            ref={mensagemRef}
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
+            onKeyDown={handleKeyDown} // Adicionando o evento de tecla
             placeholder="Digite sua mensagem"
             rows="3"
             className="flex-1 p-2 border rounded mr-2"
