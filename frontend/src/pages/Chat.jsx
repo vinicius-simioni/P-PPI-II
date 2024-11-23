@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Chat = () => {
-  const { id } = useParams(); 
-  const navigate = useNavigate(); 
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [mensagem, setMensagem] = useState('');
-  const [historico, setHistorico] = useState([]); 
-  const [chats, setChats] = useState([]); 
+  const [historico, setHistorico] = useState([]);
+  const [chats, setChats] = useState([]);
 
   const token = localStorage.getItem('token');
 
@@ -17,23 +17,23 @@ const Chat = () => {
       const response = await axios.get(`http://localhost:3000/api/mensagens/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setHistorico(response.data); 
+      setHistorico(response.data);
     } catch (error) {
       console.error('Erro ao carregar histórico de mensagens:', error);
     }
   };
 
   // Buscar lista de outros chats
-  const carregarChats = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/chats', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setChats(response.data);
-    } catch (error) {
-      console.error('Erro ao carregar chats:', error);
-    }
-  };
+  // const carregarChats = async () => {
+  //   try {
+  //     const response = await axios.get('http://localhost:3000/api/chats', {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     setChats(response.data);
+  //   } catch (error) {
+  //     console.error('Erro ao carregar chats:', error);
+  //   }
+  // };
 
   // Enviar mensagem
   const enviarMensagem = async () => {
@@ -43,14 +43,14 @@ const Chat = () => {
           'http://localhost:3000/api/mensagens',
           {
             texto: mensagem,
-            id_receptor: id, 
+            id_receptor: id,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         setMensagem('');
-        carregarHistorico(); 
+        carregarHistorico();
       } catch (error) {
         console.error('Erro ao enviar mensagem:', error);
       }
@@ -60,7 +60,7 @@ const Chat = () => {
   // Efeito para carregar dados ao montar o componente ou trocar de chat
   useEffect(() => {
     carregarHistorico();
-    carregarChats();
+    // carregarChats();
   }, [id]);
 
   return (
@@ -72,9 +72,8 @@ const Chat = () => {
           {chats.map((chat) => (
             <li
               key={chat.id}
-              className={`p-2 mb-2 rounded cursor-pointer ${
-                chat.id.toString() === id ? 'bg-blue-200' : 'hover:bg-gray-200'
-              }`}
+              className={`p-2 mb-2 rounded cursor-pointer ${chat.id.toString() === id ? 'bg-blue-200' : 'hover:bg-gray-200'
+                }`}
               onClick={() => navigate(`/chat/${chat.id}`)}
             >
               {chat.nome} {/* Exibe o nome do usuário */}
@@ -92,11 +91,10 @@ const Chat = () => {
             historico.map((msg) => (
               <div
                 key={msg.id}
-                className={`mb-2 ${
-                  msg.id_remetente.toString() === id
+                className={`mb-2 ${msg.id_emissor.toString() === id
                     ? 'text-left'
                     : 'text-right text-blue-600'
-                }`}
+                  }`}
               >
                 <p>{msg.texto}</p>
                 <small className="text-gray-500 text-sm">{msg.createdAt}</small>
