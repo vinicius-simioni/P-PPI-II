@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: true,
       },
       texto: {
-        type: Sequelize.STRING(500),
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       id_emissor: {

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       texto: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       id_emissor: {
