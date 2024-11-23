@@ -1,16 +1,42 @@
-import { useState } from 'react';
-import Reputation from '../components/Reputation.jsx';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Profile = () => {
   const [user, setUser] = useState({
-    name: 'John Doe',
-    reputation: 4.5,
+    name: '',
+    reputation: 0,
   });
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId'); 
+    const token = localStorage.getItem('token'); 
+
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/usuarios/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUser({
+          name: response.data.nome, 
+          reputation: response.data.reputacao || 0, 
+        });
+      } catch (error) {
+        console.error('Erro ao carregar os dados do usuário', error);
+      }
+    };
+
+    if (userId && token) {
+      fetchUserData();
+    } else {
+      console.error('Usuário não encontrado ou token inválido.');
+    }
+  }, []); 
 
   return (
     <div className="text-center mt-8">
-      <h1 className="text-4xl font-bold mb-6">{user.name}'s Profile</h1>
-      <Reputation reputation={user.reputation} />
     </div>
   );
 };
