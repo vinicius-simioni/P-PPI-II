@@ -24,6 +24,7 @@ const App = () => (
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/history" element={<ExchangeHistory />} />
         <Route path="/chat/:id" element={<Chat />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </div>
   </Router>
