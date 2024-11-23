@@ -64,7 +64,7 @@ const Chat = () => {
   }, [id]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[90vh]">
       {/* Lista de outros chats (coluna à esquerda) */}
       <div className="w-1/4 border-r p-4 overflow-y-auto">
         <h2 className="text-lg font-bold mb-4">Seus Chats</h2>
