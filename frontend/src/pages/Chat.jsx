@@ -60,8 +60,8 @@ const Chat = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setMensagem('');
-        carregarHistorico();
+        setMensagem(''); // Limpa a mensagem
+        carregarHistorico(); // Atualiza o histórico de mensagens
         // Focar novamente no campo de texto após o envio
         if (mensagemRef.current) {
           mensagemRef.current.focus();
@@ -133,13 +133,12 @@ const Chat = () => {
 
         {/* Campo de envio de mensagem */}
         <div className="flex items-center">
-          <textarea
+          <input
             ref={mensagemRef}
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
             onKeyDown={handleKeyDown} // Adicionando o evento de tecla
             placeholder="Digite sua mensagem"
-            rows="3"
             className="flex-1 p-2 border rounded mr-2"
           />
           <button
