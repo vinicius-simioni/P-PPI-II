@@ -1,5 +1,6 @@
 const { Mensagem } = require("../models");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
+const { sequelize } = require('../models');
 
 class MensagemController {
   async enviarMensagem(req, res) {
@@ -29,6 +30,8 @@ class MensagemController {
     const id_emissor = req.user_id;
     const { id_receptor } = req.query;
 
+    console.log('Listar Mensagens');
+
     if (!id_receptor) {
       return res.status(400).json({ error: "Receptor é necessário" });
     }
@@ -51,19 +54,27 @@ class MensagemController {
   }
 
   async historicoMensagens(req, res) {
-    const { id_receptor } = req.query;
-    const id_remetente = req.user_id; 
+    const id_receptor  = req.params.id;
+    const id_emissor = req.user_id;
 
+    console.log("Receptor:", id_receptor, "Emissor:", id_emissor);
+  
     try {
-      const mensagens = await Mensagem.findAll({
-        where: {
-          [Op.or]: [
-            { id_remetente, id_receptor },
-            { id_remetente: id_receptor, id_receptor: id_remetente },
-          ],
-        },
-        order: [["createdAt", "ASC"]], 
-      });
+      const mensagens = await sequelize.query(
+        `SELECT * 
+         FROM mensagem
+         WHERE 
+           (id_emissor = :id_emissor AND id_receptor = :id_receptor)
+           OR (id_emissor = :id_receptor AND id_receptor = :id_emissor)
+         ORDER BY createdAt ASC`,
+        {
+          replacements: { id_emissor, id_receptor },
+          type: Sequelize.QueryTypes.SELECT, // Tipo de query para SELECT
+        }
+      );
+
+      console.log("Mensagens retornadas:", mensagens);
+  
       res.json(mensagens);
     } catch (error) {
       console.error("Erro ao carregar histórico:", error);
