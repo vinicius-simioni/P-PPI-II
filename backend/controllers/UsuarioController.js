@@ -73,6 +73,45 @@ class UsuarioController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async update(req, res) {
+    console.log('pediu para atualizar')
+    const { nome, cidade } = req.body; 
+    const userId = req.user_id; 
+  
+    try {
+      const user = await Usuario.findByPk(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+  
+      await user.update({ nome, cidade }); 
+  
+      res.json({ message: 'Informações atualizadas com sucesso', user });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getById(req, res) {
+    const userId = req.user_id; 
+  
+    try {
+      const user = await Usuario.findByPk(userId, {
+        attributes: ['id', 'nome', 'email', 'cidade'], 
+      });
+  
+      if (!user) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+  
+      res.json(user); 
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  
 }
 
 module.exports = new UsuarioController();
