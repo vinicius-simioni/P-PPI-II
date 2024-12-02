@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      status: { 
+        type: DataTypes.ENUM('D', 'I'),
+        allowNull: false,
+      },
     },
     {
       tableName: "livros",
