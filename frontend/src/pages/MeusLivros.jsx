@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const MeusLivros = () => {
   const [livros, setLivros] = useState([]);
-  const [novoLivro, setNovoLivro] = useState({ titulo: '', autor: '' });
+  const [novoLivro, setNovoLivro] = useState({ titulo: '', autor: '', status: 'D' });
   const [mostrarModal, setMostrarModal] = useState(false);
   const [editar, setEditar] = useState(false);
   const [livroAtual, setLivroAtual] = useState(null);
@@ -54,7 +54,7 @@ const MeusLivros = () => {
           const livroAdicionado = response.data;
           setLivros([...livros, livroAdicionado]);
 
-          setNovoLivro({ titulo: '', autor: '' });
+          setNovoLivro({ titulo: '', autor: '', status: 'D' });
           setMostrarModal(false);
         } else {
           alert('Erro ao salvar o livro. Tente novamente.');
@@ -125,7 +125,7 @@ const MeusLivros = () => {
 
   const openEditModal = (livro) => {
     setLivroAtual(livro);
-    setNovoLivro({ titulo: livro.titulo, autor: livro.autor });
+    setNovoLivro({ titulo: livro.titulo, autor: livro.autor, status: livro.status });
     setMostrarModal(true);
     setEditar(true);
   };
@@ -136,7 +136,7 @@ const MeusLivros = () => {
         onClick={() => {
           setMostrarModal(true);
           setEditar(false);
-          setNovoLivro({ titulo: '', autor: '' });
+          setNovoLivro({ titulo: '', autor: '', status: 'D' });
         }}
         className="bg-blue-500 text-white px-4 py-2 rounded mb-6 hover:bg-blue-600"
       >
@@ -171,6 +171,31 @@ const MeusLivros = () => {
                   placeholder="Digite o nome do autor"
                 />
               </div>
+              <div className="mb-4">
+                <label htmlFor="status" className="block font-medium mb-2">Status</label>
+                <div className="flex items-center">
+                  <label className="mr-4">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="D"
+                      checked={editar ? livroAtual.status === 'D' : novoLivro.status === 'D'}
+                      onChange={handleChange}
+                    />
+                    Disponível
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="status"
+                      value="I"
+                      checked={editar ? livroAtual.status === 'I' : novoLivro.status === 'I'}
+                      onChange={handleChange}
+                    />
+                    Interesse
+                  </label>
+                </div>
+              </div>
               <div className="flex justify-between">
                 <button
                   type="submit"
@@ -202,6 +227,7 @@ const MeusLivros = () => {
                 <div>
                   <h3 className="text-lg font-semibold">{livro.titulo}</h3>
                   <p className="text-gray-600">Autor: {livro.autor}</p>
+                  <p className="text-gray-600">Status: {livro.status === 'D' ? 'Disponível' : 'Interesse'}</p>
                 </div>
                 <div className="flex items-center">
                   <button
