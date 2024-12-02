@@ -82,13 +82,17 @@ class LivroController {
   }
 
   async store(req, res) {
-    const { titulo, autor } = req.body;
-
-    //acessando id do middleware
+    const { titulo, autor, status } = req.body;
+  
     const id_usuario = req.user_id;
-
+  
     try {
-      const novoLivro = await Livro.create({ titulo, autor, id_usuario });
+      const novoLivro = await Livro.create({
+        titulo,
+        autor,
+        status, 
+        id_usuario,
+      });
       res.status(201).json(novoLivro);
     } catch (error) {
       res.status(500).json({ error: "Erro ao criar livro" });
@@ -97,24 +101,27 @@ class LivroController {
 
   async update(req, res) {
     const id = req.params.id;
-    const { titulo, autor } = req.body;
-    //acessando id do middleware
+    const { titulo, autor, status } = req.body;
     const id_usuario = req.user_id;
-
+  
     try {
       const livro = await Livro.findByPk(id);
       if (!livro) {
         return res.status(404).json({ error: "Livro não encontrado" });
       }
+  
       livro.titulo = titulo;
       livro.autor = autor;
+      livro.status = status;
       livro.id_usuario = id_usuario;
+  
       await livro.save();
       res.status(200).json(livro);
     } catch (error) {
       res.status(500).json({ error: "Erro ao atualizar livro" });
     }
   }
+  
 
   async destroy(req, res) {
     const id = req.params.id;
