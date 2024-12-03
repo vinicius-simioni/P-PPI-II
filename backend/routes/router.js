@@ -6,7 +6,6 @@ const LivroController = require('../controllers/LivroController');
 const UsuarioController = require('../controllers/UsuarioController');
 const AvaliacaoController = require('../controllers/AvaliacaoController');
 const MensagemController = require("../controllers/MensagemController");
-const TrocaController = require("../controllers/TrocaController")
 
 // Rotas para autenticação
 router.route("/register").post(UsuarioController.create);
@@ -22,6 +21,7 @@ router.put('/livros/:id', verifyTokenMiddleware, LivroController.update);
 router.delete('/livros/:id', verifyTokenMiddleware, LivroController.destroy);
 router.get('/livros-usuario', verifyTokenMiddleware, LivroController.findBookByUser);
 router.get('/livros-busca', verifyTokenMiddleware, LivroController.search);
+router.get("/sugestoes", verifyTokenMiddleware, LivroController.getSugestoes);
 
 // Rotas para avaliações
 router.post('/avaliacao', verifyTokenMiddleware, AvaliacaoController.criarAvaliacao);
@@ -31,10 +31,5 @@ router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensag
 router.get("/mensagens", verifyTokenMiddleware, MensagemController.listarMensagens);
 router.get('/mensagens/:id', verifyTokenMiddleware, MensagemController.historicoMensagens);
 router.get('/chats', verifyTokenMiddleware, MensagemController.listarChats);
-
-// Rotas para troca
-router.post("/trocas", TrocaController.criarTroca);
-router.get("/trocas", TrocaController.listarTrocas);
-router.get("/trocas/:id", TrocaController.detalhesTroca);
 
 module.exports = router;
