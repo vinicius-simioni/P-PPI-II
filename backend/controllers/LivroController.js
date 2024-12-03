@@ -35,7 +35,7 @@ class LivroController {
 
   async search(req, res) {
     const { titulo, autor, cidade } = req.query;
-  
+
     const sql = `
       SELECT 
         l.*, 
@@ -50,7 +50,7 @@ class LivroController {
         (:autor IS NULL OR l.autor LIKE :autor) AND
         (:cidade IS NULL OR u.cidade LIKE :cidade);
     `;
-  
+
     try {
       const [resultados] = await sequelize.query(sql, {
         replacements: {
@@ -59,7 +59,7 @@ class LivroController {
           cidade: cidade ? `%${cidade}%` : null,
         },
       });
-  
+
       console.log(resultados);
       res.status(200).json(resultados);
     } catch (error) {
@@ -83,14 +83,14 @@ class LivroController {
 
   async store(req, res) {
     const { titulo, autor, status } = req.body;
-  
+
     const id_usuario = req.user_id;
-  
+
     try {
       const novoLivro = await Livro.create({
         titulo,
         autor,
-        status, 
+        status,
         id_usuario,
       });
       res.status(201).json(novoLivro);
@@ -103,25 +103,24 @@ class LivroController {
     const id = req.params.id;
     const { titulo, autor, status } = req.body;
     const id_usuario = req.user_id;
-  
+
     try {
       const livro = await Livro.findByPk(id);
       if (!livro) {
         return res.status(404).json({ error: "Livro não encontrado" });
       }
-  
+
       livro.titulo = titulo;
       livro.autor = autor;
       livro.status = status;
       livro.id_usuario = id_usuario;
-  
+
       await livro.save();
       res.status(200).json(livro);
     } catch (error) {
       res.status(500).json({ error: "Erro ao atualizar livro" });
     }
   }
-  
 
   async destroy(req, res) {
     const id = req.params.id;
@@ -134,6 +133,109 @@ class LivroController {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Erro ao deletar livro" });
+    }
+  }
+
+  async getSugestoes(req, res) {
+    try {
+      const id_usuario = req.user_id;
+
+      //obter usuário
+      const usuario = await Usuario.findByPk(id_usuario);
+      if (!usuario || !usuario.cidade) {
+        return res
+          .status(404)
+          .json({ error: "Usuário ou cidade não encontrados." });
+      }
+
+      //obter livros de interesse do usuário 1
+      const livrosInteresseUsuario1 = await Livro.findAll({
+        where: {
+          id_usuario: id_usuario,
+          status: "I", // Livros de interesse
+        },
+      });
+
+      if (livrosInteresseUsuario1.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Usuário não possui livros de interesse." });
+      }
+
+      // Obter títulos de interesse
+      const titulosInteresse = livrosInteresseUsuario1.map(
+        (livro) => livro.titulo
+      );
+
+      //obter livros com o mesmo título disponíveis na mesma cidade
+      const livrosDisponiveisMesmaCidade = await sequelize.query(
+        `
+        SELECT 
+          l.id AS id_livro, 
+          l.titulo, 
+          l.status,
+          u.id AS id_proprietario, 
+          u.nome AS nome_proprietario 
+        FROM livros l
+        JOIN usuarios u ON u.id = l.id_usuario
+        WHERE u.cidade = :cidade
+          AND u.id != :id_usuario
+          AND l.status = 'D'
+          AND l.titulo IN (:titulosInteresse)
+        `,
+        {
+          replacements: {
+            cidade: usuario.cidade,
+            id_usuario: id_usuario,
+            titulosInteresse: titulosInteresse,
+          },
+          type: sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      //obter livros de disponíveis do usuário 1
+      const livrosDisponiveisUsuario1 = await Livro.findAll({
+        where: {
+          id_usuario: id_usuario,
+          status: "D", // Livros de interesse
+        },
+      });
+
+      const titulosLivrosDisponiveisUsuario1 = livrosDisponiveisUsuario1.map(livro => livro.titulo)
+      console.log(titulosLivrosDisponiveisUsuario1)
+
+      //limpar array para match
+      const matchArray = []
+      for (const e of livrosDisponiveisMesmaCidade){
+        console.log(e.id_proprietario)
+        //busca livros de interesse de cada proprietário
+        const livrosInteresseProprietario = await Livro.findAll({
+          where: {
+            id_usuario: e.id_proprietario,
+            status: "I", // Livros de interesse
+          },
+        });
+
+        const titulosLivrosInteresseProprietario = livrosInteresseProprietario.map(livro => livro.titulo)
+        console.log(titulosLivrosInteresseProprietario)
+
+        const interesseMutuo = titulosLivrosInteresseProprietario.some(titulo =>
+          titulosLivrosDisponiveisUsuario1.includes(titulo)
+        );
+        
+        if (interesseMutuo) {
+          console.log("Há um interesse mútuo em pelo menos um livro.");
+          matchArray.push(e)
+        } else {
+          console.log("Não há interesse mútuo em livros.");
+        }
+      }
+
+      // Retornar sugestões
+      return res.status(200).json(matchArray);
+    } catch (error) {
+      console.error("Erro ao buscar sugestões:", error);
+      res.status(500).json({ error: "Erro ao buscar sugestões" });
     }
   }
 }
