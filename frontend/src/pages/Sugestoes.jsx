@@ -49,7 +49,7 @@ const Sugestoes = () => {
       <h2 className="text-xl font-semibold mb-4">Sugestões de Troca</h2>
       <ul className="space-y-4">
         {sugestoes.map((sugestao, index) => (
-          <li key={sugestao.id_livro} className="bg-white p-4 rounded shadow flex flex-col">
+          <li key={sugestao.id_livro} className="bg-white p-4 rounded shadow flex justify-between">
             <div>
               <p><strong>Título:</strong> {sugestao.titulo}</p>
               <p><strong>Proprietário:</strong> {sugestao.nome_proprietario} (Usuário {sugestao.id_proprietario})</p>
@@ -64,7 +64,7 @@ const Sugestoes = () => {
                 </div>
               )}
             </div>
-            <div className="flex mt-2">
+            <div className="mt-2">
               <button
                 onClick={() => iniciarChat(sugestao.id_proprietario)}
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mx-2"
