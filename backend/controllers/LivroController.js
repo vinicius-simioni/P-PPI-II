@@ -201,13 +201,16 @@ class LivroController {
         },
       });
 
-      const titulosLivrosDisponiveisUsuario1 = livrosDisponiveisUsuario1.map(livro => livro.titulo)
-      console.log(titulosLivrosDisponiveisUsuario1)
+      const titulosLivrosDisponiveisUsuario1 = livrosDisponiveisUsuario1.map(
+        (livro) => livro.titulo
+      );
+      console.log(titulosLivrosDisponiveisUsuario1);
 
       //limpar array para match
-      const matchArray = []
-      for (const e of livrosDisponiveisMesmaCidade){
-        console.log(e.id_proprietario)
+      const matchArray = [];
+      const interessesMutuos = [];
+      for (const e of livrosDisponiveisMesmaCidade) {
+        console.log(e.id_proprietario);
         //busca livros de interesse de cada proprietário
         const livrosInteresseProprietario = await Livro.findAll({
           where: {
@@ -216,23 +219,31 @@ class LivroController {
           },
         });
 
-        const titulosLivrosInteresseProprietario = livrosInteresseProprietario.map(livro => livro.titulo)
-        console.log(titulosLivrosInteresseProprietario)
+        const titulosLivrosInteresseProprietario =
+          livrosInteresseProprietario.map((livro) => livro.titulo);
+        console.log("Títulos de Interesse do Proprietário:");
+        console.log(titulosLivrosInteresseProprietario);
 
-        const interesseMutuo = titulosLivrosInteresseProprietario.some(titulo =>
-          titulosLivrosDisponiveisUsuario1.includes(titulo)
+        const interesseMutuo = titulosLivrosInteresseProprietario.some(
+          (titulo) => titulosLivrosDisponiveisUsuario1.includes(titulo)
         );
-        
+
         if (interesseMutuo) {
           console.log("Há um interesse mútuo em pelo menos um livro.");
-          matchArray.push(e)
+          matchArray.push(e);
+          // verificar valores de interesse mútuo
+          const titulosInteresseMutuo =
+            titulosLivrosInteresseProprietario.filter((titulo) =>
+              titulosLivrosDisponiveisUsuario1.includes(titulo)
+            );
+          interessesMutuos.push(titulosInteresseMutuo)
         } else {
           console.log("Não há interesse mútuo em livros.");
         }
       }
 
       // Retornar sugestões
-      return res.status(200).json(matchArray);
+      return res.status(200).json({matchArray, interessesMutuos});
     } catch (error) {
       console.error("Erro ao buscar sugestões:", error);
       res.status(500).json({ error: "Erro ao buscar sugestões" });
