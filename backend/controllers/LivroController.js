@@ -48,7 +48,8 @@ class LivroController {
       WHERE 
         (:titulo IS NULL OR l.titulo LIKE :titulo) AND
         (:autor IS NULL OR l.autor LIKE :autor) AND
-        (:cidade IS NULL OR u.cidade LIKE :cidade);
+        (:cidade IS NULL OR u.cidade LIKE :cidade) AND
+        l.status = 'D';
     `;
 
     try {
