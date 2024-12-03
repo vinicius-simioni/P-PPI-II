@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import MeusLivros from './pages/MeusLivros.jsx';
 import LivrosDisponiveis from './pages/LivrosDisponiveis.jsx';
 import Chat from './pages/Chat.jsx';
+import Sugestoes from './pages/Sugestoes.jsx';
 
 const App = () => (
   <Router>
@@ -25,6 +26,7 @@ const App = () => (
         <Route path="/history" element={<ExchangeHistory />} />
         <Route path="/chat/:id" element={<Chat />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/sugestoes" element={<Sugestoes />}/>
       </Routes>
     </div>
   </Router>
