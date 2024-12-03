@@ -55,7 +55,7 @@ const Sugestoes = () => {
               <p><strong>Proprietário:</strong> {sugestao.nome_proprietario} (Usuário {sugestao.id_proprietario})</p>
               {interessesMutuos[index] && interessesMutuos[index].length > 0 && (
                 <div className="mt-2">
-                  <strong>Interesses mútuos:</strong>
+                  <strong>Interessado em:</strong>
                   <ul className="list-disc list-inside">
                     {interessesMutuos[index].map((titulo, i) => (
                       <li key={i}>{titulo}</li>
