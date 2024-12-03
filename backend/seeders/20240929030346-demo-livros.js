@@ -29,6 +29,9 @@ module.exports = {
         status: 'I', 
       },
 
+
+
+
       {
         titulo: 'C',
         autor: 'C',
@@ -38,8 +41,20 @@ module.exports = {
       {
         titulo: 'C',
         autor: 'C',
-        id_usuario: 3,
+        id_usuario: 2,
         status: 'D', 
+      },
+      {
+        titulo: 'D',
+        autor: 'D',
+        id_usuario: 1,
+        status: 'D', 
+      },
+      {
+        titulo: 'D',
+        autor: 'D',
+        id_usuario: 2,
+        status: 'I', 
       },
 
     ]);
