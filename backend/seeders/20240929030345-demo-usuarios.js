@@ -13,19 +13,19 @@ module.exports = {
         nome: 'Usuário 1', 
         email: 'user1@mail.com', 
         senha: hashedPassword, 
-        cidade: 'Cidade A' 
+        cidade: 'Bento Gonçalves' 
       },
       { 
         nome: 'Usuário 2', 
         email: 'user2@mail.com', 
         senha: hashedPassword, 
-        cidade: 'Cidade B' 
+        cidade: 'Bento Gonçalves' 
       },
       { 
         nome: 'Usuário 3', 
         email: 'user3@mail.com', 
         senha: hashedPassword, 
-        cidade: 'Cidade C' 
+        cidade: 'Bento Gonçalves' 
       }
     ]);
   },
