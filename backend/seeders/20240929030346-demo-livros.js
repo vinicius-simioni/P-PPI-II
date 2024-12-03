@@ -5,23 +5,43 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('livros', [
       {
-        titulo: 'Livro 1',
-        autor: 'Autor 1',
+        titulo: 'A',
+        autor: 'A',
         id_usuario: 1,
-        status: 'D', 
+        status: 'I', 
       },
       {
-        titulo: 'Livro 2',
-        autor: 'Autor 2',
+        titulo: 'A',
+        autor: 'A',
         id_usuario: 2,
         status: 'D', 
       },
       {
-        titulo: 'Livro 3',
-        autor: 'Autor 3',
-        id_usuario: 3,
-        status: 'I',
+        titulo: 'B',
+        autor: 'B',
+        id_usuario: 1,
+        status: 'D', 
       },
+      {
+        titulo: 'B',
+        autor: 'B',
+        id_usuario: 2,
+        status: 'I', 
+      },
+
+      {
+        titulo: 'C',
+        autor: 'C',
+        id_usuario: 1,
+        status: 'I', 
+      },
+      {
+        titulo: 'C',
+        autor: 'C',
+        id_usuario: 3,
+        status: 'D', 
+      },
+
     ]);
   },
 
