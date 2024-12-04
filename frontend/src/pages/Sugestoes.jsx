@@ -6,6 +6,8 @@ const Sugestoes = () => {
   const [sugestoes, setSugestoes] = useState([]);
   const [interessesMutuos, setInteressesMutuos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
+  const [selectedUser, setSelectedUser] = useState(null); // Usuário selecionado para troca
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +34,27 @@ const Sugestoes = () => {
     fetchSugestoes();
   }, []);
 
+  const iniciarChat = (id_usuario) => {
+    navigate(`/chat/${id_usuario}`);
+  };
+
+  const proporTroca = (sugestao) => {
+    setSelectedUser(sugestao);
+    setModalOpen(true); // Abre o modal
+  };
+
+  const fecharModal = () => {
+    setModalOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Capturar e processar os dados do formulário
+    console.log("Proposta enviada.");
+    fecharModal();
+  };
+
   if (loading) {
     return <p>Carregando sugestões...</p>;
   }
@@ -39,10 +62,6 @@ const Sugestoes = () => {
   if (sugestoes.length === 0) {
     return <p>Nenhuma sugestão de troca encontrada.</p>;
   }
-
-  const iniciarChat = (id_usuario) => {
-    navigate(`/chat/${id_usuario}`);
-  };
 
   return (
     <div className="p-6">
@@ -52,15 +71,15 @@ const Sugestoes = () => {
           <li key={sugestao.id_livro} className="bg-white p-4 rounded shadow flex justify-between">
             <div>
               <p><strong>Título:</strong> {sugestao.titulo}</p>
-              <p><strong>Proprietário:</strong> {sugestao.nome_proprietario} (Usuário {sugestao.id_proprietario})</p>
+              <p><strong>Proprietário:</strong> {sugestao.nome_proprietario} (Id {sugestao.id_proprietario})</p>
               {interessesMutuos[index] && interessesMutuos[index].length > 0 && (
                 <div className="mt-2">
                   <strong>Interessado em:</strong>
-                  <ul className="list-disc list-inside">
-                    {interessesMutuos[index].map((titulo, i) => (
-                      <li key={i}>{titulo}</li>
+                  <div className="list-inside">
+                    {interessesMutuos[index].map((livro, i) => (
+                      <p key={livro.id}><strong>Título:</strong> {livro.titulo}</p>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
             </div>
@@ -71,10 +90,101 @@ const Sugestoes = () => {
               >
                 Iniciar Chat
               </button>
+              <button
+                onClick={() => proporTroca(sugestao)}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-2"
+              >
+                Propor uma troca
+              </button>
             </div>
           </li>
         ))}
       </ul>
+
+      {/* Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded shadow-lg w-1/3">
+            <h3 className="text-lg font-semibold mb-4">Propor Troca</h3>
+            {selectedUser && (
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* Colocar o id oculto selectUser.id_proprietario */}
+
+
+                {/* Campo Proprietário */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Proprietário
+                  </label>
+                  <input
+                    type="text"
+                    value={selectedUser.nome_proprietario}
+                    readOnly
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100"
+                  />
+                </div>
+
+                {/* Campo Título do Livro */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Título do Livro
+                  </label>
+                  <input
+                    type="text"
+                    value={selectedUser.titulo}
+                    readOnly
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100"
+                  />
+                </div>
+
+                {/* Campo Livro Proposto */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Livro proposto
+                  </label>
+                  <input
+                    type="text"
+                    value={selectedUser.titulo}
+                    readOnly
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100"
+                  />
+                </div>
+
+                {/* Campo Proposta de Troca */}
+                <div>
+                  <label htmlFor="proposta" className="block text-sm font-medium text-gray-700">
+                    Proposta de Troca
+                  </label>
+                  <textarea
+                    id="proposta"
+                    rows="4"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    placeholder="Descreva sua proposta de troca."
+                    required
+                  ></textarea>
+                </div>
+
+                {/* Botões */}
+                <div className="flex justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={fecharModal}
+                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Enviar Proposta
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

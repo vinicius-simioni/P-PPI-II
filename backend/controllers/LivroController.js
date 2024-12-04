@@ -175,7 +175,7 @@ class LivroController {
           l.id AS id_livro, 
           l.titulo, 
           l.status,
-          u.id AS id_proprietario, 
+          l.id_usuario as id_proprietario,
           u.nome AS nome_proprietario 
         FROM livros l
         JOIN usuarios u ON u.id = l.id_usuario
@@ -198,7 +198,7 @@ class LivroController {
       const livrosDisponiveisUsuario1 = await Livro.findAll({
         where: {
           id_usuario: id_usuario,
-          status: "D", // Livros de interesse
+          status: "D", // Livros disponíveis
         },
       });
 
@@ -220,6 +220,12 @@ class LivroController {
           },
         });
 
+        // Converte os resultados em objetos puros
+        const livrosInteresseProprietarioPuros =
+          livrosInteresseProprietario.map((livro) =>
+            livro.get({ plain: true })
+          );
+
         const titulosLivrosInteresseProprietario =
           livrosInteresseProprietario.map((livro) => livro.titulo);
         console.log("Títulos de Interesse do Proprietário:");
@@ -232,19 +238,13 @@ class LivroController {
         if (interesseMutuo) {
           console.log("Há um interesse mútuo em pelo menos um livro.");
           matchArray.push(e);
-          // verificar valores de interesse mútuo
-          const titulosInteresseMutuo =
-            titulosLivrosInteresseProprietario.filter((titulo) =>
-              titulosLivrosDisponiveisUsuario1.includes(titulo)
-            );
-          interessesMutuos.push(titulosInteresseMutuo)
+          interessesMutuos.push(livrosInteresseProprietarioPuros);
         } else {
           console.log("Não há interesse mútuo em livros.");
         }
       }
 
-      // Retornar sugestões
-      return res.status(200).json({matchArray, interessesMutuos});
+      return res.status(200).json({ matchArray, interessesMutuos });
     } catch (error) {
       console.error("Erro ao buscar sugestões:", error);
       res.status(500).json({ error: "Erro ao buscar sugestões" });
