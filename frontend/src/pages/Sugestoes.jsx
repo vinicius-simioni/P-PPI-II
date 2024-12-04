@@ -6,8 +6,11 @@ const Sugestoes = () => {
   const [sugestoes, setSugestoes] = useState([]);
   const [interessesMutuos, setInteressesMutuos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
-  const [selectedUser, setSelectedUser] = useState(null); // Usuário selecionado para troca
+  const [modalOpen, setModalOpen] = useState(false); 
+  const [selectedUser, setSelectedUser] = useState(null); 
+  const [livroProposto, setLivroProposto] = useState("");
+  const [dataTroca, setDataTroca] = useState("");
+  const [idDestinatario, setIdDestinatario] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +48,7 @@ const Sugestoes = () => {
 
   const proporTroca = (sugestao) => {
     setSelectedUser(sugestao);
-    setModalOpen(true); // Abre o modal
+    setModalOpen(true); 
   };
 
   const fecharModal = () => {
@@ -53,11 +56,31 @@ const Sugestoes = () => {
     setSelectedUser(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Capturar e processar os dados do formulário
-    console.log("Proposta enviada.");
-    fecharModal();
+
+    const token = localStorage.getItem("token");
+    const propostaData = {
+      id_destinatario: e.target.idDestinatario.value,
+      id_livro_proposto: livroProposto,
+      id_livro_interesse: e.target.idLivroInteresse.value,
+      data: dataTroca,
+      texto_proposta: e.target.proposta.value,
+    };
+
+    try {
+      await axios.post("http://localhost:3000/api/trocas", propostaData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("Troca proposta com sucesso!");
+      fecharModal();
+    } catch (error) {
+      console.error("Erro ao propor a troca:", error);
+      alert("Erro ao propor a troca.");
+    }
   };
 
   if (loading) {
@@ -122,7 +145,8 @@ const Sugestoes = () => {
                 <input
                   type="hidden"
                   name="idDestinatario"
-                  value={selectedUser.id_proprietario}
+                  value={selectedUser?.id_proprietario}
+                  onChange={(e) => setIdDestinatario(e.target.value)}  
                 />
 
                 {/* Campo Proprietário */}
@@ -158,6 +182,8 @@ const Sugestoes = () => {
                   </label>
                   <select
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                    value={livroProposto}
+                    onChange={(e) => setLivroProposto(e.target.value)} // Atualiza o estado com o valor selecionado
                     required
                   >
                     <option value="">Selecione um livro</option>
@@ -178,6 +204,8 @@ const Sugestoes = () => {
                   </label>
                   <input
                     type="date"
+                    value={dataTroca} // Associando ao estado
+                    onChange={(e) => setDataTroca(e.target.value)} // Atualiza o estado com a data selecionada
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
                     required
                   />

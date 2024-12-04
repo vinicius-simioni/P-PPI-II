@@ -6,6 +6,7 @@ const LivroController = require('../controllers/LivroController');
 const UsuarioController = require('../controllers/UsuarioController');
 const AvaliacaoController = require('../controllers/AvaliacaoController');
 const MensagemController = require("../controllers/MensagemController");
+const TrocaController = require('../controllers/TrocaController');
 
 // Rotas para autenticação
 router.route("/register").post(UsuarioController.create);
@@ -31,5 +32,9 @@ router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensag
 router.get("/mensagens", verifyTokenMiddleware, MensagemController.listarMensagens);
 router.get('/mensagens/:id', verifyTokenMiddleware, MensagemController.historicoMensagens);
 router.get('/chats', verifyTokenMiddleware, MensagemController.listarChats);
+
+// Rotas para trocas
+router.post('/trocas', verifyTokenMiddleware, TrocaController.criarTroca);
+router.put('/trocas/:id', verifyTokenMiddleware, TrocaController.atualizarTroca);
 
 module.exports = router;
