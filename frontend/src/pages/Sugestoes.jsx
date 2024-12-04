@@ -38,6 +38,11 @@ const Sugestoes = () => {
     navigate(`/chat/${id_usuario}`);
   };
 
+  // Este useEffect será chamado sempre que selectedUser mudar
+  useEffect(() => {
+    console.log(selectedUser);
+  }, [selectedUser]);
+
   const proporTroca = (sugestao) => {
     setSelectedUser(sugestao);
     setModalOpen(true); // Abre o modal
@@ -108,13 +113,22 @@ const Sugestoes = () => {
             <h3 className="text-lg font-semibold mb-4">Propor Troca</h3>
             {selectedUser && (
               <form className="space-y-4" onSubmit={handleSubmit}>
-                {/* Colocar o id oculto selectUser.id_proprietario */}
-
+                {/* Campos Ocultos */}
+                <input
+                  type="hidden"
+                  name="idLivroInteresse"
+                  value={selectedUser.id_livro}
+                />
+                <input
+                  type="hidden"
+                  name="idDestinatario"
+                  value={selectedUser.id_proprietario}
+                />
 
                 {/* Campo Proprietário */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Proprietário
+                    Destinatário
                   </label>
                   <input
                     type="text"
@@ -127,7 +141,7 @@ const Sugestoes = () => {
                 {/* Campo Título do Livro */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Título do Livro
+                    Título do meu livro de interesse
                   </label>
                   <input
                     type="text"
@@ -140,13 +154,32 @@ const Sugestoes = () => {
                 {/* Campo Livro Proposto */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Livro proposto
+                    Título do livro que proponho para ele
+                  </label>
+                  <select
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                    required
+                  >
+                    <option value="">Selecione um livro</option>
+                    {interessesMutuos
+                      .find((_, index) => sugestoes[index]?.id_livro === selectedUser?.id_livro)
+                      ?.map((livro) => (
+                        <option key={livro.id} value={livro.id}>
+                          {livro.titulo}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                {/* Campo Data da Troca */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Data da Troca
                   </label>
                   <input
-                    type="text"
-                    value={selectedUser.titulo}
-                    readOnly
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100"
+                    type="date"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                    required
                   />
                 </div>
 
