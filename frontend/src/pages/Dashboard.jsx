@@ -32,8 +32,8 @@ const Dashboard = () => {
             route="/reputacao"
           />
           <DashboardCard 
-            title="Histórico de Trocas" 
-            description="Acompanhe as trocas realizadas no passado." 
+            title="Trocas" 
+            description="Acompanhe as trocas pendentes e as realizadas no passado." 
             route="/historico"
           />
         </section>
