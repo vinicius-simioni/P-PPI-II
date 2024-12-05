@@ -93,6 +93,7 @@ class TrocaController {
       // Consulta SQL pura
       const sql = `
         SELECT 
+          t.id,
           t.id_remetente AS usuario_remetente, 
           ur.nome AS nome_remetente, 
           t.id_destinatario, 
@@ -134,6 +135,8 @@ class TrocaController {
     try {
       const { id } = req.params;
       const { status } = req.body; // recebe ou 'aceita' ou 'recusada'
+
+      console.log(id)
 
       // Verificar se o status é válido
       if (!["aceita", "recusada"].includes(status)) {
