@@ -11,6 +11,7 @@ import LivrosDisponiveis from './pages/LivrosDisponiveis.jsx';
 import Chat from './pages/Chat.jsx';
 import Sugestoes from './pages/Sugestoes.jsx';
 import ListaTrocas from './pages/ListaTrocas.jsx';
+import AvaliacoesUsuario from './pages/AvaliacoesUsuario.jsx';
 
 const App = () => (
   <Router>
@@ -29,6 +30,7 @@ const App = () => (
         <Route path="/chat" element={<Chat />} />
         <Route path="/sugestoes" element={<Sugestoes />}/>
         <Route path="/trocas" element={<ListaTrocas />}/>
+        <Route path="/reputacao" element={<AvaliacoesUsuario />}/>
       </Routes>
     </div>
   </Router>
