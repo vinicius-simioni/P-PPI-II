@@ -36,5 +36,6 @@ router.get('/chats', verifyTokenMiddleware, MensagemController.listarChats);
 // Rotas para trocas
 router.post('/trocas', verifyTokenMiddleware, TrocaController.criarTroca);
 router.put('/trocas/:id', verifyTokenMiddleware, TrocaController.atualizarTroca);
+router.get("/trocas", verifyTokenMiddleware, TrocaController.listarTrocas);
 
 module.exports = router;
