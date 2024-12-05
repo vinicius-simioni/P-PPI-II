@@ -15,7 +15,8 @@ const ListaTrocas = () => {
           },
         });
 
-        setTrocas(response.data); 
+        console.log(response.data); // Exibir os dados para verificação
+        setTrocas(response.data); // Passar diretamente o array para o estado
       } catch (error) {
         console.error("Erro ao buscar as trocas:", error);
       } finally {
@@ -64,33 +65,33 @@ const ListaTrocas = () => {
       <ul className="space-y-4">
         {trocas.map((troca) => (
           <li
-            key={troca.id}
+            key={troca.usuario_remetente} // Usar id_remetente como chave
             className="bg-white p-4 rounded shadow flex justify-between"
           >
             <div>
               <p>
                 <strong>Proprietário do Livro de Interesse:</strong>
-                {troca.usuarioDestinatario ? troca.usuarioDestinatario.nome : 'Desconhecido'}
+                {troca.nome_remetente}
               </p>
               <p>
                 <strong>Livro de Interesse:</strong>
-                {troca.livroInteresse ? troca.livroInteresse.titulo : 'Desconhecido'}
+                {troca.titulo_interesse || "Desconhecido"}
               </p>
               <p>
                 <strong>Proprietário do Livro Proposto:</strong>
-                {troca.usuarioRemetente ? troca.usuarioRemetente.nome : 'Desconhecido'}
+                {troca.nome_destinatario || "Desconhecido"}
               </p>
               <p>
                 <strong>Livro Proposto:</strong>
-                {troca.livroProposto ? troca.livroProposto.titulo : 'Desconhecido'}
+                {troca.titulo_proposto || "Desconhecido"}
               </p>
               <p>
                 <strong>Data da Troca:</strong>
-                {troca.data ? new Date(troca.data).toLocaleDateString() : 'Data não disponível'}
+                {troca.data ? new Date(troca.data).toLocaleDateString() : "Data não disponível"}
               </p>
               <p>
                 <strong>Proposta:</strong>
-                {troca.texto_proposta || 'Sem proposta'}
+                {troca.texto_proposta || "Sem proposta"}
               </p>
             </div>
             <div className="mt-2">
@@ -98,13 +99,13 @@ const ListaTrocas = () => {
                 <>
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-2"
-                    onClick={() => handleStatusChange(troca.id, "aceita")}
+                    onClick={() => handleStatusChange(troca.usuario_remetente, "aceita")}
                   >
                     Aceitar
                   </button>
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2"
-                    onClick={() => handleStatusChange(troca.id, "recusada")}
+                    onClick={() => handleStatusChange(troca.usuario_remetente, "recusada")}
                   >
                     Recusar
                   </button>
