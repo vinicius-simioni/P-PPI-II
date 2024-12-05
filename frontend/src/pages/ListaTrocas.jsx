@@ -15,9 +15,7 @@ const ListaTrocas = () => {
           },
         });
 
-        setTrocas(response.data); // Supondo que a resposta seja uma lista de trocas
-
-        console.log(response.data)
+        setTrocas(response.data); 
       } catch (error) {
         console.error("Erro ao buscar as trocas:", error);
       } finally {
@@ -27,6 +25,30 @@ const ListaTrocas = () => {
 
     fetchTrocas();
   }, []);
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:3000/api/trocas/${id}/status`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Atualizar o estado da troca após a alteração
+      setTrocas((prevTrocas) =>
+        prevTrocas.map((troca) =>
+          troca.id === id ? { ...troca, status } : troca
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao atualizar o status da troca:", error);
+    }
+  };
 
   if (loading) {
     return <p>Carregando trocas...</p>;
@@ -47,38 +69,53 @@ const ListaTrocas = () => {
           >
             <div>
               <p>
-                <strong>Proprietário do Livro de Interesse:</strong> 
+                <strong>Proprietário do Livro de Interesse:</strong>
                 {troca.usuarioDestinatario ? troca.usuarioDestinatario.nome : 'Desconhecido'}
               </p>
               <p>
-                <strong>Livro de Interesse:</strong> 
+                <strong>Livro de Interesse:</strong>
                 {troca.livroInteresse ? troca.livroInteresse.titulo : 'Desconhecido'}
               </p>
               <p>
-                <strong>Proprietário do Livro Proposto:</strong> 
+                <strong>Proprietário do Livro Proposto:</strong>
                 {troca.usuarioRemetente ? troca.usuarioRemetente.nome : 'Desconhecido'}
               </p>
               <p>
-                <strong>Livro Proposto:</strong> 
+                <strong>Livro Proposto:</strong>
                 {troca.livroProposto ? troca.livroProposto.titulo : 'Desconhecido'}
               </p>
               <p>
-                <strong>Data da Troca:</strong> 
+                <strong>Data da Troca:</strong>
                 {troca.data ? new Date(troca.data).toLocaleDateString() : 'Data não disponível'}
               </p>
               <p>
-                <strong>Proposta:</strong> 
+                <strong>Proposta:</strong>
                 {troca.texto_proposta || 'Sem proposta'}
               </p>
             </div>
             <div className="mt-2">
-              {/* Adicione outros botões ou ações que desejar, como aceitar a troca */}
-              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-2">
-                Aceitar
-              </button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2">
-                Recusar
-              </button>
+              {troca.status === "pendente" && (
+                <>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-2"
+                    onClick={() => handleStatusChange(troca.id, "aceita")}
+                  >
+                    Aceitar
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2"
+                    onClick={() => handleStatusChange(troca.id, "recusada")}
+                  >
+                    Recusar
+                  </button>
+                </>
+              )}
+              {troca.status === "aceita" && (
+                <span className="text-green-500">Troca aceita</span>
+              )}
+              {troca.status === "recusada" && (
+                <span className="text-red-500">Troca recusada</span>
+              )}
             </div>
           </li>
         ))}
