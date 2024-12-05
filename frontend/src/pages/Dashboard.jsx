@@ -34,7 +34,7 @@ const Dashboard = () => {
           <DashboardCard 
             title="Trocas" 
             description="Acompanhe as trocas pendentes e as realizadas no passado." 
-            route="/historico"
+            route="/trocas"
           />
         </section>
       </main>
