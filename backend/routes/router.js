@@ -25,7 +25,8 @@ router.get('/livros-busca', verifyTokenMiddleware, LivroController.search);
 router.get("/sugestoes", verifyTokenMiddleware, LivroController.getSugestoes);
 
 // Rotas para avaliações
-router.post('/avaliacao', verifyTokenMiddleware, AvaliacaoController.criarAvaliacao);
+router.post("/avaliacoes", AvaliacaoController.criarAvaliacao);
+router.get("/avaliacoes/:id", AvaliacaoController.listarAvaliacoes);
 
 // Rotas para mensagens
 router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensagem);
@@ -37,5 +38,6 @@ router.get('/chats', verifyTokenMiddleware, MensagemController.listarChats);
 router.post('/trocas', verifyTokenMiddleware, TrocaController.criarTroca);
 router.put('/trocas/:id', verifyTokenMiddleware, TrocaController.atualizarTroca);
 router.get("/trocas", verifyTokenMiddleware, TrocaController.listarTrocas);
+router.put('/trocas/:id/status',verifyTokenMiddleware, TrocaController.atualizarStatus);
 
 module.exports = router;
