@@ -99,13 +99,13 @@ const ListaTrocas = () => {
                 <>
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-2"
-                    onClick={() => handleStatusChange(troca.usuario_remetente, "aceita")}
+                    onClick={() => handleStatusChange(troca.id, "aceita")}
                   >
                     Aceitar
                   </button>
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2"
-                    onClick={() => handleStatusChange(troca.usuario_remetente, "recusada")}
+                    onClick={() => handleStatusChange(troca.id, "recusada")}
                   >
                     Recusar
                   </button>
