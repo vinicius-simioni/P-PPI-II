@@ -134,6 +134,39 @@ class TrocaController {
       return res.status(500).json({ error: "Erro ao listar as trocas" });
     }
   }
+
+  async atualizarStatus(req, res) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body; // recebe ou 'aceita' ou 'recusada'
+  
+      // Verificar se o status é válido
+      if (!['aceita', 'recusada'].includes(status)) {
+        return res.status(400).json({ error: "Status inválido" });
+      }
+  
+      // Encontrar a troca
+      const troca = await Troca.findByPk(id);
+      if (!troca) {
+        return res.status(404).json({ error: "Troca não encontrada" });
+      }
+  
+      // Verificar se o usuário logado é o destinatário da troca
+      if (troca.id_destinatario !== req.user_id) {
+        return res.status(403).json({ error: "Você não tem permissão para aceitar ou recusar esta troca" });
+      }
+  
+      // Atualizar o status da troca
+      troca.status = status;
+      await troca.save();
+  
+      return res.status(200).json(troca);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro ao atualizar o status da troca" });
+    }
+  }
+  
 }
 
 module.exports = new TrocaController();
