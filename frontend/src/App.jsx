@@ -10,7 +10,6 @@ import MeusLivros from './pages/MeusLivros.jsx';
 import LivrosDisponiveis from './pages/LivrosDisponiveis.jsx';
 import Chat from './pages/Chat.jsx';
 import Sugestoes from './pages/Sugestoes.jsx';
-import ListaTrocas from './pages/ListaTrocasRecebidas.jsx';
 import AvaliacoesUsuario from './pages/AvaliacoesUsuario.jsx';
 import ListaTrocasRecebidas from './pages/ListaTrocasRecebidas.jsx';
 
