@@ -13,11 +13,28 @@ class LivroController {
 
   async findBookByUser(req, res) {
     try {
-      // id do usuário extraído do middleware
       const id_usuario = req.user_id;
 
       const livros = await Livro.findAll({
-        where: { id_usuario: id_usuario },
+        where: {
+          id_usuario: id_usuario,
+          [Op.and]: [
+            {
+              id: {
+                [Op.notIn]: sequelize.literal(`
+                  (SELECT id_livro_proposto FROM trocas WHERE status = 'aceita')
+                `),
+              },
+            },
+            {
+              id: {
+                [Op.notIn]: sequelize.literal(`
+                  (SELECT id_livro_interesse FROM trocas WHERE status = 'aceita')
+                `),
+              },
+            },
+          ],
+        },
       });
 
       if (livros.length === 0) {
