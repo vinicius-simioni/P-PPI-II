@@ -32,9 +32,9 @@ const Dashboard = () => {
             route="/reputacao"
           />
           <DashboardCard 
-            title="Trocas" 
-            description="Acompanhe as trocas pendentes e as realizadas no passado." 
-            route="/trocas"
+            title="Trocas Recebidas" 
+            description="Acompanhe as propostas de troca pendentes." 
+            route="/trocas-recebidas"
           />
         </section>
       </main>
