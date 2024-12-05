@@ -183,6 +183,8 @@ class LivroController {
           AND u.id != :id_usuario
           AND l.status = 'D'
           AND l.titulo IN (:titulosInteresse)
+          AND l.id NOT IN (SELECT id_livro_proposto from trocas)
+          AND l.id NOT IN (SELECT id_livro_interesse from trocas)
         `,
         {
           replacements: {
