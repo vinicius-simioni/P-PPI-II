@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     texto_proposta: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM('pendente', 'aceita', 'recusada'),
+      defaultValue: 'pendente',
+      allowNull: false,
     }
   }, {
     tableName: 'trocas',
