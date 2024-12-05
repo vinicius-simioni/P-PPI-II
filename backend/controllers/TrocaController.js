@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Troca, Livro, Usuario } = require("../models");
 
 class TrocaController {
@@ -22,11 +23,9 @@ class TrocaController {
       const usuarioDestinatario = await Usuario.findByPk(id_destinatario);
 
       if (!livroProposto || !livroInteresse) {
-        return res
-          .status(400)
-          .json({
-            error: "Livro proposto ou livro de interesse não encontrado",
-          });
+        return res.status(400).json({
+          error: "Livro proposto ou livro de interesse não encontrado",
+        });
       }
 
       if (!usuarioRemetente || !usuarioDestinatario) {
@@ -54,7 +53,7 @@ class TrocaController {
 
   async atualizarTroca(req, res) {
     try {
-      const { id } = req.params; 
+      const { id } = req.params;
       const {
         id_remetente,
         id_destinatario,
@@ -84,6 +83,55 @@ class TrocaController {
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Erro ao atualizar a troca" });
+    }
+  }
+
+  async listarTrocas(req, res) {
+    try {
+      const id_usuario = req.user_id; 
+
+      // Buscar todas as trocas nas quais o usuário é o remetente ou o destinatário
+      const trocas = await Troca.findAll({
+        where: {
+          [Op.or]: [
+            { id_remetente: id_usuario },
+            { id_destinatario: id_usuario }
+          ]
+        },
+        include: [
+          {
+            model: Livro,
+            foreignKey: 'id_livro_proposto',
+            attributes: ['titulo'],
+          },
+          {
+            model: Livro,
+            foreignKey: 'id_livro_interesse',
+            attributes: ['titulo'],
+          },
+          {
+            model: Usuario,
+            foreignKey: 'id_remetente',
+            attributes: ['nome'],
+          },
+          {
+            model: Usuario,
+            foreignKey: 'id_destinatario',
+            attributes: ['nome'],
+          }
+        ]
+      });
+  
+      if (!trocas.length) {
+        return res.status(404).json({ message: "Nenhuma troca encontrada" });
+      }
+
+      console.log(trocas)
+  
+      return res.status(200).json(trocas);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro ao listar as trocas" });
     }
   }
 }
