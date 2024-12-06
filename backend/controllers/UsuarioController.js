@@ -6,21 +6,26 @@ const jwtSecret = '98fda@7s9f89saf98as8f!@#a8sdf@678!@#056456@63!@#$%';
 
 class UsuarioController {
   async create(req, res) {
-    await body('nome').notEmpty().withMessage('O campo nome é obrigatório').run(req);
-    await body('email').isEmail().withMessage('O email é inválido').run(req);
-    await body('senha')
-      .isLength({ min: 6 })
-      .withMessage('A senha deve possuir ao menos 6 caracteres')
-      .run(req);
-    await body('cidade').notEmpty().withMessage('O campo cidade é obrigatório').run(req);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
+    
     try {
       const { nome, email, senha, cidade } = req.body;
+
+      if (!nome || nome.trim() === '') {
+        return res.status(400).json({ error: 'Nome é obrigatório' });
+      }
+
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      if (!email || !emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Email inválido' });
+      }
+
+      if (!senha || senha.length < 6) {
+        return res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' });
+      }
+
+      if (!cidade || cidade.trim() === '') {
+        return res.status(400).json({ error: 'Cidade é obrigatória' });
+      }
 
       const existingUser = await Usuario.findOne({ where: { email } });
       if (existingUser) {

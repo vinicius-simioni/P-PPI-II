@@ -7,6 +7,7 @@ const Login = () => {
   const [senha, setSenha] = useState('');
   const [cidade, setCidade] = useState('');
   const [nome, setNome] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -29,7 +30,9 @@ const Login = () => {
         navigate('/dashboard')
       })
       .catch((error) => {
-        console.error('Erro no login:', error);
+        console.error('Erro no cadastro:', error.response?.data || error.message);
+        
+        setError(error.response?.data?.error || 'Ocorreu um erro inesperado. Tente novamente.');
       });
   };
 
@@ -37,6 +40,8 @@ const Login = () => {
     <div className="max-w-lg mx-auto mt-8">
       <h2 className="text-2xl font-bold mb-6 text-center">Cadastre-se</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+
+        {error && <div className="text-red-500 text-sm">{error}</div>}
 
         <input
           type="text"
