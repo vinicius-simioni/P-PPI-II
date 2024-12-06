@@ -71,32 +71,30 @@ const ListaTrocasRecebidas = () => {
       <ul className="space-y-4">
         {trocas.map((troca) => (
           <li
-            key={troca.usuario_remetente} // Usar id_remetente como chave
+            key={troca.usuario_remetente}
             className="bg-white p-4 rounded shadow flex justify-between"
           >
             <div>
               <p>
-                <strong>Proprietário do Livro de Interesse:</strong>
-                {troca.nome_remetente}
-              </p>
-              <p>
-                <strong>Livro de Interesse:</strong>
+                <strong>Livro requisitado: </strong>
                 {troca.titulo_interesse || "Desconhecido"}
               </p>
+
               <p>
-                <strong>Proprietário do Livro Proposto:</strong>
-                {troca.nome_destinatario || "Desconhecido"}
+                <strong>Livro requisitado por: </strong>
+                {troca.nome_remetente}
               </p>
+
               <p>
-                <strong>Livro Proposto:</strong>
+                <strong>Livro oferecido: </strong>
                 {troca.titulo_proposto || "Desconhecido"}
               </p>
               <p>
-                <strong>Data da Troca:</strong>
+                <strong>Data da Troca: </strong>
                 {troca.data ? new Date(troca.data).toLocaleDateString() : "Data não disponível"}
               </p>
               <p>
-                <strong>Proposta:</strong>
+                <strong>Proposta: </strong>
                 {troca.texto_proposta || "Sem proposta"}
               </p>
             </div>

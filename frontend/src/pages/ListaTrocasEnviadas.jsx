@@ -76,27 +76,23 @@ const ListaTrocasEnviadas = () => {
           >
             <div>
               <p>
-                <strong>Proprietário do Livro de Interesse:</strong>
-                {troca.nome_remetente}
-              </p>
-              <p>
-                <strong>Livro de Interesse:</strong>
+                <strong>Meu livro de interesse: </strong>
                 {troca.titulo_interesse || "Desconhecido"}
               </p>
               <p>
-                <strong>Proprietário do Livro Proposto:</strong>
+                <strong>Proprietário do livro: </strong>
                 {troca.nome_destinatario || "Desconhecido"}
               </p>
               <p>
-                <strong>Livro Proposto:</strong>
+                <strong>Meu livro proposto: </strong>
                 {troca.titulo_proposto || "Desconhecido"}
               </p>
               <p>
-                <strong>Data da Troca:</strong>
+                <strong>Data da Troca: </strong>
                 {troca.data ? new Date(troca.data).toLocaleDateString() : "Data não disponível"}
               </p>
               <p>
-                <strong>Proposta:</strong>
+                <strong>Proposta: </strong>
                 {troca.texto_proposta || "Sem proposta"}
               </p>
             </div>
