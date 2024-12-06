@@ -103,7 +103,7 @@ const LivrosDisponiveis = () => {
                 <h3 className="text-lg font-semibold">{livro.titulo}</h3>
                 <p className="text-gray-600">Autor: {livro.autor}</p>
                 <p className="text-gray-600">Cidade: {livro.cidade || 'Cidade não especificada'}</p>
-                <p className="text-gray-600">Anunciante: {livro.usuario?.nome}</p> {/* Nome do usuário */}
+                <p className="text-gray-600">Anunciante: {livro.nome}</p> {/* Nome do usuário */}
               </div>
               <div className="flex items-center space-x-2">
                 <button
