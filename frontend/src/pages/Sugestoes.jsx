@@ -6,11 +6,12 @@ const Sugestoes = () => {
   const [sugestoes, setSugestoes] = useState([]);
   const [interessesMutuos, setInteressesMutuos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false); 
-  const [selectedUser, setSelectedUser] = useState(null); 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [livroProposto, setLivroProposto] = useState("");
   const [dataTroca, setDataTroca] = useState("");
   const [idDestinatario, setIdDestinatario] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const Sugestoes = () => {
 
   const proporTroca = (sugestao) => {
     setSelectedUser(sugestao);
-    setModalOpen(true); 
+    setModalOpen(true);
   };
 
   const fecharModal = () => {
@@ -58,6 +59,9 @@ const Sugestoes = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Limpa qualquer mensagem de erro anterior
+    setErrorMessage("");
 
     const token = localStorage.getItem("token");
     const propostaData = {
@@ -75,11 +79,18 @@ const Sugestoes = () => {
         },
       });
 
-      alert("Troca proposta com sucesso!");
       fecharModal();
     } catch (error) {
       console.error("Erro ao propor a troca:", error);
-      alert("Erro ao propor a troca.");
+
+      // Verifica se existe uma resposta do servidor e define a mensagem de erro
+      if (error.response && error.response.data && error.response.data.error) {
+        // Exibe a mensagem de erro retornada pelo servidor
+        setErrorMessage(error.response.data.error);
+      } else {
+        // Caso contrário, exibe uma mensagem genérica
+        setErrorMessage("Erro ao propor a troca. Tente novamente.");
+      }
     }
   };
 
@@ -146,7 +157,7 @@ const Sugestoes = () => {
                   type="hidden"
                   name="idDestinatario"
                   value={selectedUser?.id_proprietario}
-                  onChange={(e) => setIdDestinatario(e.target.value)}  
+                  onChange={(e) => setIdDestinatario(e.target.value)}
                 />
 
                 {/* Campo Proprietário */}
@@ -158,6 +169,7 @@ const Sugestoes = () => {
                     type="text"
                     value={selectedUser.nome_proprietario}
                     readOnly
+                    disabled
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100"
                   />
                 </div>
@@ -171,6 +183,7 @@ const Sugestoes = () => {
                     type="text"
                     value={selectedUser.titulo}
                     readOnly
+                    disabled
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100"
                   />
                 </div>
@@ -224,6 +237,8 @@ const Sugestoes = () => {
                     required
                   ></textarea>
                 </div>
+
+                {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
 
                 {/* Botões */}
                 <div className="flex justify-end space-x-2">

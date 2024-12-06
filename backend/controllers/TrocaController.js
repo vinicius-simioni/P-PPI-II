@@ -22,6 +22,34 @@ class TrocaController {
       const usuarioRemetente = await Usuario.findByPk(id_remetente);
       const usuarioDestinatario = await Usuario.findByPk(id_destinatario);
 
+      // Verificar se todos os campos obrigatórios foram enviados
+      if (
+        !id_destinatario ||
+        !id_livro_proposto ||
+        !id_livro_interesse ||
+        !data ||
+        !texto_proposta
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Todos os campos são obrigatórios." });
+      }
+
+      // Verificar se a data de troca é válida e se está no futuro
+      const dataTroca = new Date(data);
+      if (isNaN(dataTroca.getTime()) || dataTroca <= new Date()) {
+        return res
+          .status(400)
+          .json({ error: "A data da troca deve ser uma data futura válida." });
+      }
+
+      // Validar o tamanho do texto da proposta (exemplo: mínimo 10 caracteres)
+      if (texto_proposta.length < 10) {
+        return res.status(400).json({
+          error: "A proposta de troca deve conter pelo menos 10 caracteres.",
+        });
+      }
+
       if (!livroProposto || !livroInteresse) {
         return res.status(400).json({
           error: "Livro proposto ou livro de interesse não encontrado",
@@ -113,8 +141,8 @@ class TrocaController {
       `;
 
       const resultados = await sequelize.query(sql, {
-        replacements: { id_destinatario: id_usuario }, 
-        type: sequelize.QueryTypes.SELECT, 
+        replacements: { id_destinatario: id_usuario },
+        type: sequelize.QueryTypes.SELECT,
       });
 
       console.log(resultados);
@@ -157,8 +185,8 @@ class TrocaController {
       `;
 
       const resultados = await sequelize.query(sql, {
-        replacements: { id_remetente: id_usuario }, 
-        type: sequelize.QueryTypes.SELECT, 
+        replacements: { id_remetente: id_usuario },
+        type: sequelize.QueryTypes.SELECT,
       });
 
       console.log(resultados);
@@ -179,7 +207,7 @@ class TrocaController {
       const { id } = req.params;
       const { status } = req.body; // recebe ou 'aceita' ou 'recusada'
 
-      console.log(id)
+      console.log(id);
 
       // Verificar se o status é válido
       if (!["aceita", "recusada", "pendente"].includes(status)) {
@@ -211,7 +239,7 @@ class TrocaController {
         .json({ error: "Erro ao atualizar o status da troca" });
     }
   }
-  
+
   async getSugestoes(req, res) {
     try {
       const id_usuario = req.user_id;
