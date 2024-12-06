@@ -211,6 +211,126 @@ class TrocaController {
         .json({ error: "Erro ao atualizar o status da troca" });
     }
   }
+  
+  async getSugestoes(req, res) {
+    try {
+      const id_usuario = req.user_id;
+
+      //obter usuário
+      const usuario = await Usuario.findByPk(id_usuario);
+      if (!usuario || !usuario.cidade) {
+        return res
+          .status(404)
+          .json({ error: "Usuário ou cidade não encontrados." });
+      }
+
+      //obter livros de interesse do usuário 1
+      const livrosInteresseUsuario1 = await Livro.findAll({
+        where: {
+          id_usuario: id_usuario,
+          status: "I", // Livros de interesse
+        },
+      });
+
+      if (livrosInteresseUsuario1.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "Usuário não possui livros de interesse." });
+      }
+
+      // Obter títulos de interesse
+      const titulosInteresse = livrosInteresseUsuario1.map(
+        (livro) => livro.titulo
+      );
+
+      //obter livros com o mesmo título disponíveis na mesma cidade
+      const livrosDisponiveisMesmaCidade = await sequelize.query(
+        `
+        SELECT 
+          l.id AS id_livro, 
+          l.titulo, 
+          l.status,
+          l.id_usuario as id_proprietario,
+          u.nome AS nome_proprietario 
+        FROM livros l
+        JOIN usuarios u ON u.id = l.id_usuario
+        WHERE u.cidade = :cidade
+          AND u.id != :id_usuario
+          AND l.status = 'D'
+          AND l.titulo IN (:titulosInteresse)
+          AND l.id NOT IN (select id_livro_proposto from trocas)
+          AND l.id NOT IN (select id_livro_interesse from trocas)
+          AND l.titulo not in (select lv.titulo from trocas t
+                              join livros lv 
+                              on lv.id_usuario = t.id_destinatario
+                              or lv.id_usuario = t.id_remetente)
+        `,
+        {
+          replacements: {
+            cidade: usuario.cidade,
+            id_usuario: id_usuario,
+            titulosInteresse: titulosInteresse,
+          },
+          type: sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      //obter livros de disponíveis do usuário 1
+      const livrosDisponiveisUsuario1 = await Livro.findAll({
+        where: {
+          id_usuario: id_usuario,
+          status: "D", // Livros disponíveis
+        },
+      });
+
+      const titulosLivrosDisponiveisUsuario1 = livrosDisponiveisUsuario1.map(
+        (livro) => livro.titulo
+      );
+      console.log(titulosLivrosDisponiveisUsuario1);
+
+      //limpar array para match
+      const matchArray = [];
+      const interessesMutuos = [];
+      for (const e of livrosDisponiveisMesmaCidade) {
+        console.log(e.id_proprietario);
+        //busca livros de interesse de cada proprietário
+        const livrosInteresseProprietario = await Livro.findAll({
+          where: {
+            id_usuario: e.id_proprietario,
+            status: "I", // Livros de interesse
+          },
+        });
+
+        // Converte os resultados em objetos puros
+        const livrosInteresseProprietarioPuros =
+          livrosInteresseProprietario.map((livro) =>
+            livro.get({ plain: true })
+          );
+
+        const titulosLivrosInteresseProprietario =
+          livrosInteresseProprietario.map((livro) => livro.titulo);
+        console.log("Títulos de Interesse do Proprietário:");
+        console.log(titulosLivrosInteresseProprietario);
+
+        const interesseMutuo = titulosLivrosInteresseProprietario.some(
+          (titulo) => titulosLivrosDisponiveisUsuario1.includes(titulo)
+        );
+
+        if (interesseMutuo) {
+          console.log("Há um interesse mútuo em pelo menos um livro.");
+          matchArray.push(e);
+          interessesMutuos.push(livrosInteresseProprietarioPuros);
+        } else {
+          console.log("Não há interesse mútuo em livros.");
+        }
+      }
+
+      return res.status(200).json({ matchArray, interessesMutuos });
+    } catch (error) {
+      console.error("Erro ao buscar sugestões:", error);
+      res.status(500).json({ error: "Erro ao buscar sugestões" });
+    }
+  }
 }
 
 module.exports = new TrocaController();
