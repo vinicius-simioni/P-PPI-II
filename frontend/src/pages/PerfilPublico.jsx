@@ -61,10 +61,6 @@ const PerfilPublico = () => {
           <strong>Cidade: </strong>
           {usuario.cidade || "Não informada"}
         </p>
-        <p>
-          <strong>Email: </strong>
-          {usuario.email}
-        </p>
       </div>
 
       <div>
