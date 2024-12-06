@@ -88,9 +88,8 @@ class TrocaController {
 
   async listarTrocasRecebidas(req, res) {
     try {
-      const id_usuario = req.user_id; // ID do usuário que faz a requisição
+      const id_usuario = req.user_id;
 
-      // Consulta SQL pura
       const sql = `
         SELECT 
           t.id,
@@ -131,6 +130,50 @@ class TrocaController {
     }
   }
 
+  async listarTrocasEnviadas(req, res) {
+    try {
+      const id_usuario = req.user_id;
+
+      const sql = `
+        SELECT 
+          t.id,
+          t.id_remetente AS usuario_remetente, 
+          ur.nome AS nome_remetente, 
+          t.id_destinatario, 
+          ud.nome AS nome_destinatario,
+          t.id_livro_proposto,
+          lp.titulo AS titulo_proposto,
+          t.id_livro_interesse,
+          li.titulo AS titulo_interesse,
+          t.data,
+          t.texto_proposta,
+          t.status
+        FROM trocas t
+        JOIN usuarios ur ON ur.id = t.id_remetente
+        JOIN usuarios ud ON ud.id = t.id_destinatario
+        JOIN livros lp ON t.id_livro_proposto = lp.id
+        JOIN livros li ON t.id_livro_interesse = li.id
+        WHERE t.id_remetente = :id_remetente;
+      `;
+
+      const resultados = await sequelize.query(sql, {
+        replacements: { id_remetente: id_usuario }, 
+        type: sequelize.QueryTypes.SELECT, 
+      });
+
+      console.log(resultados);
+
+      if (!Array.isArray(resultados)) {
+        resultados = Object.values(resultados); // Se for um objeto, converte para array
+      }
+
+      return res.status(200).json(resultados);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Erro ao listar as trocas" });
+    }
+  }
+
   async atualizarStatus(req, res) {
     try {
       const { id } = req.params;
@@ -139,7 +182,7 @@ class TrocaController {
       console.log(id)
 
       // Verificar se o status é válido
-      if (!["aceita", "recusada"].includes(status)) {
+      if (!["aceita", "recusada", "pendente"].includes(status)) {
         return res.status(400).json({ error: "Status inválido" });
       }
 

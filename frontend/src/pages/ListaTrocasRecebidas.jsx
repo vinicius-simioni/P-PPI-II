@@ -11,7 +11,7 @@ const ListaTrocasRecebidas = () => {
     const fetchTrocas = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3000/api/trocas", {
+        const response = await axios.get("http://localhost:3000/api/trocas-recebidas", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -123,6 +123,17 @@ const ListaTrocasRecebidas = () => {
                   </button>
                 </>
               )}
+
+              {(troca.status === "aceita" || troca.status === "recusada") && (
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2"
+                  onClick={() => handleStatusChange(troca.id, "pendente")}
+                >
+                  Desfazer
+                </button>
+              )}
+
+
               {troca.status === "aceita" && (
                 <span className="text-green-500">Troca aceita</span>
               )}
