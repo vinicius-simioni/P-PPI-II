@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ListaTrocasEnviadas = () => {
   const [trocas, setTrocas] = useState([]);
@@ -83,10 +83,17 @@ const ListaTrocasEnviadas = () => {
                 <strong>Meu livro de interesse: </strong>
                 {troca.titulo_interesse || "Desconhecido"}
               </p>
+
               <p>
                 <strong>Proprietário do livro: </strong>
-                {troca.nome_destinatario || "Desconhecido"}
+                <Link
+                  to={`/perfil/${troca.id_destinatario}`}
+                  className="text-black-500 hover:text-blue-700 underline"
+                >
+                  {troca.nome_destinatario}
+                </Link>
               </p>
+
               <p>
                 <strong>Meu livro proposto: </strong>
                 {troca.titulo_proposto || "Desconhecido"}

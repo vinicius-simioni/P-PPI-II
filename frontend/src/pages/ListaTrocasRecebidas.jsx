@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ListaTrocasRecebidas = () => {
   const [trocas, setTrocas] = useState([]);
@@ -56,7 +56,7 @@ const ListaTrocasRecebidas = () => {
       console.error("Erro ao atualizar o status da troca:", error);
     }
   };
-  
+
   const avaliarUsuario = (idDestinatario) => {
     navigate(`/avaliacao/${idDestinatario}`);
   };
@@ -86,7 +86,12 @@ const ListaTrocasRecebidas = () => {
 
               <p>
                 <strong>Livro requisitado por: </strong>
-                {troca.nome_remetente}
+                <Link
+                  to={`/perfil/${troca.usuario_remetente}`}
+                  className="text-black-500 hover:text-blue-700 underline"
+                >
+                  {troca.nome_remetente}
+                </Link>
               </p>
 
               <p>
