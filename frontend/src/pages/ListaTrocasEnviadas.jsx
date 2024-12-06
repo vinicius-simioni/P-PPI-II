@@ -102,7 +102,7 @@ const ListaTrocasEnviadas = () => {
             </div>
             <div className="mt-2">
               <button
-                onClick={() => iniciarChat(troca.usuario_remetente)}
+                onClick={() => iniciarChat(troca.id_destinatario)}
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mx-2"
               >
                 Iniciar Chat
