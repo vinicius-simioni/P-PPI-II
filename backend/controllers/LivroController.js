@@ -33,6 +33,17 @@ class LivroController {
                 `),
               },
             },
+            {
+              titulo: {
+                [Op.notIn]: sequelize.literal(`
+                  (SELECT lv.titulo 
+                   FROM trocas t
+                   JOIN livros lv 
+                   ON lv.id_usuario = t.id_destinatario and t.status = 'aceita'
+                   OR lv.id_usuario = t.id_remetente and t.status = 'aceita')
+                `),
+              },
+            },
           ],
         },
       });
