@@ -6,35 +6,40 @@ const Dashboard = () => {
 
       <main className="p-6">
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <DashboardCard 
-            title="Livros Disponíveis" 
-            description="Navegue pelos livros disponíveis e encontre algo do seu interesse." 
+          <DashboardCard
+            title="Livros Disponíveis"
+            description="Navegue pelos livros disponíveis e encontre algo do seu interesse."
             route="/livros-disponiveis"
           />
-          <DashboardCard 
-            title="Meus Livros" 
-            description="Veja a lista de livros que você cadastrou na plataforma." 
+          <DashboardCard
+            title="Meus Livros"
+            description="Veja a lista de livros que você cadastrou na plataforma."
             route="/meus-livros"
           />
-          <DashboardCard 
-            title="Sugestões de Troca" 
-            description="Receba sugestões de trocas baseadas nos seus interesses." 
+          <DashboardCard
+            title="Sugestões de Troca"
+            description="Receba sugestões de trocas baseadas nos seus interesses."
             route="/sugestoes"
           />
-          <DashboardCard 
-            title="Chat" 
-            description="Converse com outros usuários para combinar trocas." 
+          <DashboardCard
+            title="Chat"
+            description="Converse com outros usuários para combinar trocas."
             route="/chat"
           />
-          <DashboardCard 
-            title="Sistema de Reputação" 
-            description="Verifique a reputação dos usuários antes de efetuar trocas." 
+          <DashboardCard
+            title="Sistema de Reputação"
+            description="Verifique a reputação dos usuários antes de efetuar trocas."
             route="/reputacao"
           />
-          <DashboardCard 
-            title="Trocas Recebidas" 
-            description="Acompanhe as propostas de troca pendentes." 
+          <DashboardCard
+            title="Trocas Recebidas"
+            description="Acompanhe as propostas de troca pendentes."
             route="/trocas-recebidas"
+          />
+          <DashboardCard
+            title="Trocas Enviadas"
+            description="Acompanhe as propostas de troca pendentes."
+            route="/trocas-enviadas"
           />
         </section>
       </main>
