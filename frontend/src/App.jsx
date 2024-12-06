@@ -10,9 +10,9 @@ import MeusLivros from './pages/MeusLivros.jsx';
 import LivrosDisponiveis from './pages/LivrosDisponiveis.jsx';
 import Chat from './pages/Chat.jsx';
 import Sugestoes from './pages/Sugestoes.jsx';
-import AvaliacoesUsuario from './pages/AvaliacoesUsuario.jsx';
 import ListaTrocasRecebidas from './pages/ListaTrocasRecebidas.jsx';
 import ListaTrocasEnviadas from './pages/ListaTrocasEnviadas.jsx';
+import CadastroAvaliacao from './pages/CadastroAvaliacao.jsx';
 
 const App = () => (
   <Router>
@@ -32,7 +32,7 @@ const App = () => (
         <Route path="/sugestoes" element={<Sugestoes />}/>
         <Route path="/trocas-recebidas" element={<ListaTrocasRecebidas />}/>
         <Route path="/trocas-enviadas" element={<ListaTrocasEnviadas />}/>
-        <Route path="/reputacao" element={<AvaliacoesUsuario />}/>
+        <Route path="/avaliacao/:id" element={<CadastroAvaliacao />}/>
       </Routes>
     </div>
   </Router>

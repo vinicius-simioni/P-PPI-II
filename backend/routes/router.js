@@ -24,8 +24,8 @@ router.get('/livros-usuario', verifyTokenMiddleware, LivroController.findBookByU
 router.get('/livros-busca', verifyTokenMiddleware, LivroController.search);
 
 // Rotas para avaliações
-router.post("/avaliacoes", AvaliacaoController.criarAvaliacao);
-router.get("/avaliacoes/:id", AvaliacaoController.listarAvaliacoes);
+router.post("/avaliacao/:id", verifyTokenMiddleware, AvaliacaoController.criarAvaliacao);
+router.get("/avaliacoes/:id", verifyTokenMiddleware, AvaliacaoController.listarAvaliacoes);
 
 // Rotas para mensagens
 router.post("/mensagens", verifyTokenMiddleware, MensagemController.enviarMensagem);

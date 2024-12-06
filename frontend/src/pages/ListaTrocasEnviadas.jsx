@@ -17,8 +17,8 @@ const ListaTrocasEnviadas = () => {
           },
         });
 
-        console.log(response.data); 
-        setTrocas(response.data); 
+        console.log(response.data);
+        setTrocas(response.data);
       } catch (error) {
         console.error("Erro ao buscar as trocas:", error);
       } finally {
@@ -31,6 +31,10 @@ const ListaTrocasEnviadas = () => {
 
   const iniciarChat = (id_usuario) => {
     navigate(`/chat/${id_usuario}`);
+  };
+
+  const avaliarUsuario = (idDestinatario) => {
+    navigate(`/avaliacao/${idDestinatario}`);
   };
 
   const handleStatusChange = async (id, status) => {
@@ -71,7 +75,7 @@ const ListaTrocasEnviadas = () => {
       <ul className="space-y-4">
         {trocas.map((troca) => (
           <li
-            key={troca.usuario_remetente} 
+            key={troca.usuario_remetente}
             className="bg-white p-4 rounded shadow flex justify-between"
           >
             <div>
@@ -97,6 +101,15 @@ const ListaTrocasEnviadas = () => {
               </p>
             </div>
             <div className="mt-2">
+              {/* Mostrar botão "Avaliar Usuário" se a troca for aceita e a data já tiver passado */}
+              {troca.status === "aceita" && new Date(troca.data) < new Date() && (
+                <button
+                  onClick={() => avaliarUsuario(troca.id_destinatario)}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                >
+                  Avaliar Usuário
+                </button>
+              )}
               <button
                 onClick={() => iniciarChat(troca.id_destinatario)}
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mx-2"
