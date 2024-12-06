@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
+import { format } from 'date-fns';
 import axios from 'axios';
 
 const Chat = () => {
@@ -25,6 +26,12 @@ const Chat = () => {
     } catch (error) {
       console.error('Erro ao carregar histórico de mensagens:', error);
     }
+  };
+
+  // Formatar data
+  const dataAmigavel = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, 'dd/MM/yyyy HH:mm');
   };
 
   // Buscar lista de outros chats
@@ -60,8 +67,9 @@ const Chat = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setMensagem(''); // Limpa a mensagem
+        setMensagem(''); 
         carregarHistorico(); // Atualiza o histórico de mensagens
+
         // Focar novamente no campo de texto após o envio
         if (mensagemRef.current) {
           mensagemRef.current.focus();
@@ -109,7 +117,7 @@ const Chat = () => {
                 }`}
               onClick={() => navigate(`/chat/${chat.id}`)}
             >
-              {chat.nome} {/* Exibe o nome do usuário */}
+              {chat.nome}
             </li>
           ))}
         </ul>
@@ -119,10 +127,9 @@ const Chat = () => {
       <div className="flex-1 p-4 flex flex-col max-w-3xl">
         {/* Histórico de mensagens */}
         <div
-          ref={historicoRef} // Adicionando referência aqui
+          ref={historicoRef}
           className="flex-1 overflow-y-auto border p-4 mb-4"
         >
-          <h2 className="text-lg font-bold mb-4">Chat com {id}</h2>
           {historico.length > 0 ? (
             historico.map((msg) => (
               <div
@@ -133,7 +140,7 @@ const Chat = () => {
                   }`}
               >
                 <p className="break-words">{msg.texto}</p>
-                <small className="text-gray-500 text-sm">{msg.createdAt}</small>
+                <small className="text-gray-500 text-sm">{dataAmigavel(msg.createdAt)}</small>
               </div>
             ))
           ) : (
@@ -147,7 +154,7 @@ const Chat = () => {
             ref={mensagemRef}
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
-            onKeyDown={handleKeyDown} // Adicionando o evento de tecla
+            onKeyDown={handleKeyDown}
             placeholder="Digite sua mensagem"
             className="flex-1 p-2 border rounded mr-2"
           />
