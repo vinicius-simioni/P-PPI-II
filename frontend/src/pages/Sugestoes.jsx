@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sugestoes = () => {
   const [sugestoes, setSugestoes] = useState([]);
@@ -121,7 +121,16 @@ const Sugestoes = () => {
           <li key={sugestao.id_livro} className="bg-white p-4 rounded shadow flex justify-between">
             <div>
               <p><strong>Título:</strong> {sugestao.titulo}</p>
-              <p><strong>Proprietário:</strong> {sugestao.nome_proprietario} (Id {sugestao.id_proprietario})</p>
+              <p>
+                <strong>Proprietário: </strong>
+                <Link
+                  to={`/perfil/${sugestao.id_proprietario}`}
+                  className="text-black-500 hover:text-blue-700 underline"
+                >
+                  {sugestao.nome_proprietario}
+                </Link>
+              </p>
+
               {interessesMutuos[index] && interessesMutuos[index].length > 0 && (
                 <div className="mt-2">
                   <strong>Interessado em:</strong>
