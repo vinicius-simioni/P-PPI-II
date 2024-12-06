@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 const CadastroAvaliacao = () => {
   const { id } = useParams();
-  const [nota, setNota] = useState(1);
+  const [nota, setNota] = useState(5);
   const [comentario, setComentario] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -30,7 +30,7 @@ const CadastroAvaliacao = () => {
         }
       );
       console.log("Avaliação criada:", response.data);
-      setNota(1);
+      setNota(5);
       setComentario("");
     } catch (error) {
       if (error.response) {

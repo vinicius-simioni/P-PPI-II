@@ -56,6 +56,10 @@ const ListaTrocasRecebidas = () => {
       console.error("Erro ao atualizar o status da troca:", error);
     }
   };
+  
+  const avaliarUsuario = (idDestinatario) => {
+    navigate(`/avaliacao/${idDestinatario}`);
+  };
 
   if (loading) {
     return <p>Carregando trocas...</p>;
@@ -99,6 +103,15 @@ const ListaTrocasRecebidas = () => {
               </p>
             </div>
             <div className="mt-2">
+              {/* Mostrar botão "Avaliar Usuário" se a troca for aceita e a data já tiver passado */}
+              {troca.status === "aceita" && new Date(troca.data) < new Date() && (
+                <button
+                  onClick={() => avaliarUsuario(troca.usuario_remetente)}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                >
+                  Avaliar Usuário
+                </button>
+              )}
               <button
                 onClick={() => iniciarChat(troca.usuario_remetente)}
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mx-2"
