@@ -27,18 +27,13 @@ const Dashboard = () => {
             route="/chat"
           />
           <DashboardCard
-            title="Sistema de Reputação"
-            description="Verifique a reputação dos usuários antes de efetuar trocas."
-            route="/reputacao"
-          />
-          <DashboardCard
             title="Trocas Recebidas"
-            description="Acompanhe as propostas de troca pendentes."
+            description="Acompanhe as propostas de troca recebidas."
             route="/trocas-recebidas"
           />
           <DashboardCard
             title="Trocas Enviadas"
-            description="Acompanhe as propostas de troca pendentes."
+            description="Acompanhe as propostas de troca enviadas."
             route="/trocas-enviadas"
           />
         </section>
