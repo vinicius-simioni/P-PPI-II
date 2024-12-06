@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -26,7 +27,14 @@ const Login = () => {
         navigate('/dashboard')
       })
       .catch((error) => {
-        console.error('Erro no login:', error);
+        console.error('Erro no login:', error.response?.data || error.message);
+
+        if (error.response && error.response.data.errors) {
+          const errorMessage = error.response.data.errors.map(err => err.msg).join(', ');
+          setError(errorMessage);
+        } else {
+          setError('Ocorreu um erro inesperado. Tente novamente.');
+        }
       });
   };
 
@@ -38,6 +46,9 @@ const Login = () => {
     <div className="max-w-lg mx-auto mt-8">
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+
         <input
           type="email"
           value={email}
