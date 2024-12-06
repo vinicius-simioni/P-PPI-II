@@ -205,7 +205,7 @@ class LivroController {
           AND l.titulo not in (select lv.titulo from trocas t
                               join livros lv 
                               on lv.id_usuario = t.id_destinatario
-                              or lv.id_usuario = t.id_remetente;)
+                              or lv.id_usuario = t.id_remetente)
         `,
         {
           replacements: {
