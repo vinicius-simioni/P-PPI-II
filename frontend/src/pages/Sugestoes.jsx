@@ -79,6 +79,17 @@ const Sugestoes = () => {
         },
       });
 
+      // Atualiza a lista de sugestões sem recarregar a página
+      const response = await axios.get("http://localhost:3000/api/sugestoes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { matchArray, interessesMutuos } = response.data;
+
+      setSugestoes(matchArray);
+      setInteressesMutuos(interessesMutuos);
+
       fecharModal();
     } catch (error) {
       console.error("Erro ao propor a troca:", error);
