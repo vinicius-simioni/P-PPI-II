@@ -13,6 +13,7 @@ import Sugestoes from './pages/Sugestoes.jsx';
 import ListaTrocasRecebidas from './pages/ListaTrocasRecebidas.jsx';
 import ListaTrocasEnviadas from './pages/ListaTrocasEnviadas.jsx';
 import CadastroAvaliacao from './pages/CadastroAvaliacao.jsx';
+import PerfilPublico from './pages/PerfilPublico.jsx';
 
 const App = () => (
   <Router>
@@ -33,6 +34,7 @@ const App = () => (
         <Route path="/trocas-recebidas" element={<ListaTrocasRecebidas />}/>
         <Route path="/trocas-enviadas" element={<ListaTrocasEnviadas />}/>
         <Route path="/avaliacao/:id" element={<CadastroAvaliacao />}/>
+        <Route path="/perfil/:id" element={<PerfilPublico />}/>
       </Routes>
     </div>
   </Router>

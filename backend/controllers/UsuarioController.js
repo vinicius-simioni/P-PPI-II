@@ -1,4 +1,4 @@
-const { Usuario } = require('../models');
+const { Usuario, Avaliacao } = require('../models');
 const bcrypt = require('bcrypt');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
@@ -116,6 +116,33 @@ class UsuarioController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async getPerfil(req, res) {
+    try {
+      // Pega o id do usuário da URL
+      const usuarioId = req.params.id;
+
+      // Busca os dados do usuário
+      const usuario = await Usuario.findByPk(usuarioId);
+      if (!usuario) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+  
+      // Busca as avaliações do usuário
+      const avaliacoes = await Avaliacao.findAll({
+        where: { id_usuario_avaliado: usuarioId },
+      });
+      
+      // Retorna o perfil do usuário e suas avaliações
+      return res.json({
+        usuario,
+        avaliacoes,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Erro ao buscar perfil" });
+    }
+  };
   
 }
 

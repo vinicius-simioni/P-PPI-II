@@ -13,6 +13,7 @@ router.route("/register").post(UsuarioController.create);
 router.route("/login").post(UsuarioController.login);
 router.put('/usuarios', verifyTokenMiddleware, UsuarioController.update);
 router.get('/usuarios/me', verifyTokenMiddleware, UsuarioController.getById);
+router.get('/perfil/:id', verifyTokenMiddleware, UsuarioController.getPerfil);
 
 // Rotas para livros
 router.get('/livros', verifyTokenMiddleware, LivroController.index);
