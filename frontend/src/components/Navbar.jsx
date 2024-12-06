@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import logo from './logo.png'
 
 const Navbar = () => {
   const token = localStorage.getItem('token');
@@ -29,7 +30,10 @@ const Navbar = () => {
 
   return (
     <nav className="bg-blue-600 text-white p-4 shadow-lg flex justify-between items-center">
+      <div className="flex items-center space-x-2">
+      <img src={logo} className="w-8 h-8"/>
       <h1 className="text-xl font-bold">Circular Livros</h1>
+      </div>
 
       <ul className="flex items-center">
         {token ? (
