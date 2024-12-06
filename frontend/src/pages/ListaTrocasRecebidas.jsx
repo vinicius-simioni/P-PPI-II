@@ -122,21 +122,22 @@ const ListaTrocasRecebidas = () => {
                 </>
               )}
 
-              {(troca.status === "aceita" || troca.status === "recusada") && (
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-2"
-                  onClick={() => handleStatusChange(troca.id, "pendente")}
-                >
-                  Desfazer
-                </button>
-              )}
-
-
               {troca.status === "aceita" && (
                 <span className="text-green-500">Troca aceita</span>
               )}
               {troca.status === "recusada" && (
                 <span className="text-red-500">Troca recusada</span>
+              )}
+
+
+              {(troca.status === "aceita" || troca.status === "recusada") && (
+                <button
+                  className="bg-red-500 text-white rounded-full w-8 h-8 items-center justify-center hover:bg-red-600 mx-2"
+                  onClick={() => handleStatusChange(troca.id, "pendente")}
+                  title="Desfazer"
+                >
+                  ✕
+                </button>
               )}
             </div>
           </li>
