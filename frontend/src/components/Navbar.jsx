@@ -1,27 +1,40 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const token = localStorage.getItem('token');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/')
+    navigate('/');
   };
+
+  // Detectar cliques fora do dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-blue-600 text-white p-4 shadow-lg flex justify-between items-center">
       <h1 className="text-xl font-bold">Circular Livros</h1>
 
       <ul className="flex items-center">
-
         {token ? (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <Link to="/dashboard">Dashboard</Link>
-            {/* Dropdown Button */}
             <button
               className="hover:underline mx-3"
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -29,9 +42,6 @@ const Navbar = () => {
               Menu ▼
             </button>
 
-
-
-            {/* Dropdown Items */}
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg">
                 <ul className="py-2">
@@ -59,5 +69,6 @@ const Navbar = () => {
     </nav>
   );
 };
+
 
 export default Navbar;
